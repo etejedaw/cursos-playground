@@ -1,4 +1,4 @@
-import Server from './server/server'
+import Server from './server/server';
 import router from './router/router';
 import MySQL from './mysql/mysql';
 
