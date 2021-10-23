@@ -1,5 +1,4 @@
 interface Transport{
-    model: string;
     getModel(): string;
     deliver(): void;
 }

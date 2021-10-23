@@ -1,7 +1,7 @@
 import Transport from "./Transport";
 
 class Truck implements Transport{
-    model: string;
+    private model: string;
 
     constructor(model: string){
         this.model = model;
