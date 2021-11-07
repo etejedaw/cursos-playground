@@ -10,7 +10,7 @@ let rectangle = new Rectangle(2, 2, "blue");
 shapes.push(circle, anotherCircle, rectangle);
 
 let shapesCopy: Shape[] = [];
-shapes.forEach(shape => shapesCopy.push(shape.clone()));
+shapesCopy = shapes.map(shape => shape.clone());
 
 console.log(shapes);
 console.log(shapesCopy);
