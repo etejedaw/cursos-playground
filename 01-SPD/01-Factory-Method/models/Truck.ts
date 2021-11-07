@@ -1,4 +1,4 @@
-import Transport from "./Transport";
+import Transport from "./Interfaces/Transport";
 
 class Truck implements Transport{
     model: string;

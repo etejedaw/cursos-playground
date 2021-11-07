@@ -1,6 +1,6 @@
-import SeaType from "../enums/sea-type";
-import Logistics from "./Logistics";
-import Ship from "./Ship";
+import SeaType from "../../enums/sea-type";
+import Logistics from "../Interfaces/Logistics";
+import Ship from "../Ship";
 
 class SeaLogistics implements Logistics{
     createTransport(type: SeaType, model: string){
