@@ -4,7 +4,7 @@ import SeaLogistics from './models/Factory/SeaLogistics';
 const roadLogistics = new RoadLogistics();
 const seaLogistics = new SeaLogistics();
 
-let c = roadLogistics.createTransport(0, "patente-01");
+let c = roadLogistics.createTransport(1, "patente-01");
 let b = seaLogistics.createTransport(0, "patente-02");
 
 console.log(c.deliver());
