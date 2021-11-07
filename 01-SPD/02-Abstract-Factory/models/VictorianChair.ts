@@ -1,4 +1,4 @@
-import Chair from './Chair';
+import Chair from './Interfaces/Chair';
 
 class VictorianChair implements Chair{
     private legs: number;

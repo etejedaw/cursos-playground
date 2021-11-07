@@ -1,4 +1,4 @@
-import Sofa from './Sofa';
+import Sofa from './Interfaces/Sofa';
 
 class VictorianSofa implements Sofa{
     private legs: number;

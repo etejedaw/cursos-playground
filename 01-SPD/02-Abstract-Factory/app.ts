@@ -1,5 +1,5 @@
-import ModernFurnitureFactory from "./models/ModernFurnitureFactory";
-import CreateFactory from "./models/CreateFactory";
+import ModernFurnitureFactory from "./models/Factory/ModernFurnitureFactory";
+import CreateFactory from "./models/Factory/CreateFactory";
 
 const factory = new ModernFurnitureFactory();
 const furniture = new CreateFactory(factory);
