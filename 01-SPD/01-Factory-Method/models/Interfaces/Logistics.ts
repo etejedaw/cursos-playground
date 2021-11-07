@@ -1,4 +1,4 @@
-import Transport from "./Transport";
+import Transport from "../Interfaces/Transport";
 
 interface Logistics{
     createTransport(type: unknown, model: string): Transport;

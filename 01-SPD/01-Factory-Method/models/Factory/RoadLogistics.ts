@@ -1,8 +1,8 @@
-import RoadType from "../enums/road-type";
-import Car from "./Car";
-import Logistics from "./Logistics";
-import Transport from "./Transport";
-import Truck from "./Truck";
+import RoadType from "../../enums/road-type";
+import Car from "../Car";
+import Logistics from "../Interfaces/Logistics";
+import Transport from "../Interfaces/Transport";
+import Truck from "../Truck";
 
 class RoadLogistics implements Logistics{
     createTransport(type: RoadType, model: string): Transport{
