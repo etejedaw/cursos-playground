@@ -1,4 +1,4 @@
-import Chair from "./Chair";
+import Chair from "./Interfaces/Chair";
 
 class DecoChair implements Chair{
     private legs: number;

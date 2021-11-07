@@ -1,4 +1,4 @@
-import CoffeTable from "./CoffeTable";
+import CoffeTable from "./Interfaces/CoffeTable";
 
 class ModernCoffeTable implements CoffeTable{
     private legs: number;
