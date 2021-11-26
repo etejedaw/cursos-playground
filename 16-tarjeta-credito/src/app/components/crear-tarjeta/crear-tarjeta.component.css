@@ -5,3 +5,8 @@
 .red-icon{
     color: red;
 }
+
+.spinner-border{
+  height: 1.5rem;
+  width: 1.5rem;
+}
