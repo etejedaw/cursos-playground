@@ -1,7 +1,12 @@
 <div class="card">
     <div class="card-body">
-      <h5 class="titulo mb-3">Crear Tarjeta</h5>
-      <form [formGroup]="form" (ngSubmit)="crearTarjeta()">
+      <h5 class="titulo mb-3">
+        {{titulo | uppercase}}
+        <div *ngIf="loading" class="spinner-border float-end" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </h5>
+      <form [formGroup]="form" (ngSubmit)="guardarTarjeta()">
         <div class="input-group input-group-lg mb-3">
             <span class="input-group-text">
                 <i class="fas fa-user-circle" [class.green-icon]="this.form.get('titular')?.valid" [class.red-icon]="this.form.get('titular')?.invalid && this.form.get('titular')?.touched"></i>
@@ -40,4 +45,3 @@
       </form>
     </div>
 </div>
-  
