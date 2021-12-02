@@ -1,2 +1,4 @@
 */node_modules
-11-typescript-mysql/dist/
+*/dist/
+*/.vscode
+*/.idea
