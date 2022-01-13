@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const path = require("path");
 const multer = require("multer");
 const feedRoutes = require("./routes/feed");
+const authRouter = require("./routes/auth");
 
 const app = express();
 
@@ -25,10 +26,12 @@ app.use((_req, res, next) => {
     next();
 });
 app.use("/feed", feedRoutes);
+app.use("/auth", authRouter);
 app.use((err, req, res, next) => {
     const status = err.statusCode;
     const message = err.message;
-    res.status(status).json({message});
+    const data = err.data;
+    res.status(status).json({message, data});
 });
 
 mongoose.connect("mongodb://localhost:27017/messages")
