@@ -9,7 +9,8 @@ import { GifsService } from '../services/gifs.service';
 })
 export class BusquedaComponent{
 
-  @ViewChild('txtBuscar') txtBuscar!: ElementRef<HTMLInputElement>;
+  @ViewChild('txtBuscar') 
+  txtBuscar!: ElementRef<HTMLInputElement>;
 
   constructor(private gifsService: GifsService){
     
@@ -17,6 +18,7 @@ export class BusquedaComponent{
 
   buscar(){
     const valor = this.txtBuscar.nativeElement.value;
+    if(valor.trim().length === 0) return;
     this.gifsService.buscarGifs(valor);
     this.txtBuscar.nativeElement.value = "";
   }
