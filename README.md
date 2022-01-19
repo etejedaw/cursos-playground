@@ -14,4 +14,4 @@ Ejercicios de práctica NodeJS
 * Curso: NodeJS - The Complete Guide (MVC, REST APIs, GraphQL, Deno) 
 * Instructor: Maximilian Schwarzmüller
 * Link: https://www.udemy.com/course/nodejs-the-complete-guide
-* Carpetas: 12~?
+* Carpetas: 12~27
