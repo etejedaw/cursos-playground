@@ -15,3 +15,10 @@ Ejercicios de práctica NodeJS
 * Instructor: Maximilian Schwarzmüller
 * Link: https://www.udemy.com/course/nodejs-the-complete-guide
 * Carpetas: 12~27
+
+****
+
+* Curso: Web Scraping in Nodejs & JavaScript 
+* Instructor: Stefan Hyltoft
+* Link: https://www.udemy.com/course/web-scraping-in-nodejs/
+* Carpetas: 28~??
