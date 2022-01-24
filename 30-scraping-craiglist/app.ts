@@ -1,5 +1,6 @@
 import puppeteer, {Page} from "puppeteer";
 import cheerio from "cheerio"
+import fs from "fs";
 
 interface ScrapingResult{
     title: string;
@@ -33,15 +34,27 @@ const scrapeFullDescriptions = async (listing: ScrapingResult[], page: Page) => 
     for(let i = 0; i < listing.length; i++){
         await page.goto(listing[i].url);
         const html = await page.content();
+        const $ = cheerio.load(html);
+        const jobDescription = $("#postingbody").text().trim();
+        const compensation = $("p.attrgroup > span:nth-child(1) > b").text().trim();
+        listing[i].jobDescription = jobDescription;
+        listing[i].compensation = compensation;
+        console.log(listing[i]);
+        await sleep(1000);
     }
+    return listing;
+}
+
+const sleep = async (miliseconds: number) => {
+    return new Promise(resolve => setTimeout(resolve, miliseconds));
 }
 
 const main = async () => {
     const browser = await puppeteer.launch({headless: false});
     const page = await browser.newPage();
     const listing = await scrapeListing(page)
-    const fullListing = scrapeFullDescriptions(listing, page);
-    console.log(fullListing);
+    const fullListing = await scrapeFullDescriptions(listing, page);
 }
 
 main();
+
