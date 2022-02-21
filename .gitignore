@@ -106,4 +106,4 @@ dist
 # IDE
 
 */.vscode
-*/.angular
+*/.angular/*
