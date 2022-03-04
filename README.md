@@ -21,4 +21,4 @@ Ejercicios de práctica NodeJS
 * Curso: Web Scraping in Nodejs & JavaScript 
 * Instructor: Stefan Hyltoft
 * Link: https://www.udemy.com/course/web-scraping-in-nodejs/
-* Carpetas: 28~??
+* Carpetas: 28~40
