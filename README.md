@@ -13,5 +13,5 @@ Ejercicios de práctica de distintos libros
 
 - Libro: You Don't Know JS Yet Collection
 - Autor: Kyle Simpson
-- Link: https://www.amazon.com/-/es/Kyle-Simpson-ebook/dp/B084BNMN7T://refactoring.guru/es/design-patterns/book/
+- Link: https://www.amazon.com/-/es/Kyle-Simpson-ebook/dp/B084BNMN7T
 - Directorio: 02-YDKJY/
