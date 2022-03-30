@@ -25,10 +25,20 @@ Ejercicios de práctica NodeJS
 
 ****
 
+* Curso: Introduction to Sequelize ORM (w/ Express.js + Postgres)
+
+* Instructor: David Armendáriz
+
+* Link: https://www.udemy.com/course/introduction-to-sequelize-orm-w-expressjs-postgres/
+
+* Carpetas: 41-??
+
+****
+
 * Curso: Node JS: Advanced Concepts
 
 * Instructor: Stephen Grider
 
 * Link: https://www.udemy.com/course/advanced-node-for-developers/
 
-* Carpetas: 41~
+* Carpetas: XX~??
