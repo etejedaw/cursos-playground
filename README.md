@@ -49,3 +49,19 @@ Ejercicios de cursos tomados en distintos cursos
 * Link: https://www.udemy.com/course/docker-and-kubernetes-the-complete-guide/
 * Directorio: 06-DAKTCG
 * Estado: En Curso
+
+****
+
+* Libro: Sumérgete en los patrones de diseño
+* Autor: Alexander Shvets
+* Link: https://refactoring.guru/es/design-patterns/book/
+* Directorio: 01-SPD
+* Estado: Finalizado
+
+****
+
+* Libro: You Don't Know JS Yet Collection
+* Autor: Kyle Simpson
+* Link: https://www.amazon.com/-/es/Kyle-Simpson-ebook/dp/B084BNMN7T
+* Directorio: 02-YDKJY
+* Estado: Finalizado
