@@ -56,7 +56,7 @@ Ejercicios de cursos tomados en distintos cursos
 * Autor: Alexander Shvets
 * Link: https://refactoring.guru/es/design-patterns/book/
 * Directorio: 07-DIDP
-* Estado: Finalizado
+* Estado: En Curso
 
 ****
 
