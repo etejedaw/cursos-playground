@@ -1,0 +1,35 @@
+<div class="container mt-4">
+  <div class="row">
+    <!----- Data biding ----->
+    <h1>Data biding</h1>
+    <h2>Hola mi nombre es {{name}}</h2>
+    <h3>La suma de 4 + 5 es {{getSuma(4,5)}}</h3>
+  </div>
+</div>
+
+<div class="container mt-4">
+  <div class="row">
+    <!----- Property biding ----->
+    <h1>Property biding</h1>
+    <input type="text" class="form-control" [placeholder]="textPlaceholder" [disabled] = "dishabled">
+  </div>
+</div>
+
+<div class="container mt-4">
+  <div class="row">
+    <!----- Event biding ----->
+    <h1>Evend biding</h1>
+    <h3>{{text}}</h3>
+    <button class="btn btn-primary" (click)="changeText()">Click</button>
+  </div>
+</div>
+
+<div class="container mt-4">
+  <div class="row">
+    <!----- Two way data biding ----->
+    <h1>Two way data biding</h1>
+    <input type="text" class="form-control" placeholder="Escriba algo aqui" [(ngModel)]="message">
+    <br>
+    {{message}}
+  </div>
+</div>

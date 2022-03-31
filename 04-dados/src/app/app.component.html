@@ -1,0 +1,10 @@
+<div class="jumbotron text-center">
+  <button class="btn btn-success btn-lg" (click)="rollDice()">Tirar dados</button>
+  <br>
+  <img class="img" [src]="leftDice">
+  <img class="img" [src]="rightDice">
+  <br>
+  <h1 *ngIf="num1 === num2">
+    <span class="badge bg-success">Ganaste!</span>
+  </h1>
+</div>

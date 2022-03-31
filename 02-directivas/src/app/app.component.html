@@ -1,0 +1,48 @@
+<div class="container mt-4">
+  <div class="row">
+    <h3>Listado de estudiantes</h3>
+    <button class="btn btn-primary ml-auto" (click)="toggle()">Toggle</button>
+  </div>
+  <table class=table *ngIf="show">
+    <thead>
+      <th>Nro.</th>
+      <th>Nombre</th>
+      <th>Estado</th>
+    </thead>
+    <tbody>
+      <tr *ngFor="let student of studentList; let i=index">
+        <td>{{i+1}}</td>
+        <td>
+          <span [ngClass]="student.name === 'Prici' ? 'badge bg-success' : 'badge bg-secondary' ">{{student.name}}</span>
+        </td>
+        <td [ngStyle]="{'font-style': student.status === 'Aprobado' ? 'italic' : 'normal'}">{{student.status}}</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 *ngIf="studentList.length === 0">No hay registros</h3>
+</div>
+
+<div class="container mt-4">
+  <div class="row">
+    <h3>Listado de estudiantes</h3>
+    <button class="btn btn-primary ml-auto" (click)="toggle()">Toggle</button>
+  </div>
+  <table class=table *ngIf="show">
+    <thead>
+      <th>Nro.</th>
+      <th>Nombre</th>
+      <th>Estado</th>
+    </thead>
+    <tbody>
+      <tr *ngFor="let student of studentList; let i=index" [ngSwitch]="student.status">
+        <td>{{i+1}}</td>
+        <td>{{student.name}}</td>
+        <td>
+          <span *ngSwitchCase="'Aprobado'" class="badge bg-success"> {{student.status}}</span>
+          <span *ngSwitchCase="'Regular'" class="badge bg-secondary"> {{student.status}}</span>
+          <span *ngSwitchCase="'Reprobado'" class="badge bg-danger"> {{student.status}}</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
