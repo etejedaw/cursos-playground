@@ -71,7 +71,7 @@ Ejercicios de cursos tomados en distintos cursos
 * Curso: Angular 11 - La Guia Completa + 15 Proyectos 
 * Instructor: Tomas Ruiz Diaz
 * Link: https://www.udemy.com/course/angular-10-fundamentos-8-app/
-* Carpetas: 01~16
+* Directorio: 09-ALGC
 * Estado: Finalizado
 
 ****
@@ -79,5 +79,5 @@ Ejercicios de cursos tomados en distintos cursos
 * Curso: Angular - De cero a experto
 * Instructor: Fernando Herrera
 * Link: https://www.udemy.com/course/angular-fernando-herrera/
-* Carpetas: 17~??
-* Carpeta: En Curso
+* Directorio: 10-ADCAE
+* Estado: En Curso
