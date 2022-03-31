@@ -55,7 +55,7 @@ Ejercicios de cursos tomados en distintos cursos
 * Libro: Sumérgete en los patrones de diseño
 * Autor: Alexander Shvets
 * Link: https://refactoring.guru/es/design-patterns/book/
-* Directorio: 01-SPD
+* Directorio: 07-DIDP
 * Estado: Finalizado
 
 ****
@@ -63,5 +63,5 @@ Ejercicios de cursos tomados en distintos cursos
 * Libro: You Don't Know JS Yet Collection
 * Autor: Kyle Simpson
 * Link: https://www.amazon.com/-/es/Kyle-Simpson-ebook/dp/B084BNMN7T
-* Directorio: 02-YDKJY
+* Directorio: 08-YDKJY
 * Estado: Finalizado
