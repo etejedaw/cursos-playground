@@ -1,9 +1,9 @@
 import {Sequelize} from "sequelize";
+import { registerModels } from "../models";
 
 class Database {
-
     environment: string;
-    dbConfig: any;
+    dbConfig: any; // config/database.ts
     isTestEnvironment: boolean;
     connection?: Sequelize;
 
@@ -14,23 +14,25 @@ class Database {
     }
 
     getConnectionString(){
-        const {DB_USERNAME, DB_PASSWORD, DB_HOST, DB_PORT, DB_DATABASE} = this.dbConfig[this.environment];
-        return `postgres://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_DATABASE}`;
+        const {DB_USERNAME, DB_PASSWORD, HOST, PORT, DATABASE} = this.dbConfig[this.environment];
+        return `postgres://${DB_USERNAME}:${DB_PASSWORD}@${HOST}:${PORT}/${DATABASE}`;
     }
 
     async connect(){
         const uri = this.getConnectionString();
         const logging = this.isTestEnvironment ? false : console.log;
         this.connection = new Sequelize(uri, {logging});
-        await this.connection.authenticate({logging: false});
+        await this.connection.authenticate({logging});
         if(!this.isTestEnvironment) console.log("Connection has been stablished successfully!");
+        registerModels(this.connection);
         await this.sync();
     }
 
     async sync(){
+        const logging = this.isTestEnvironment ? false : console.log;
         await this.connection?.sync({
             force: this.isTestEnvironment,
-            logging: false
+            logging
         });
         if(!this.isTestEnvironment) console.log("Models synchronized successfully");
     }
