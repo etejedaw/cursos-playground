@@ -40,6 +40,11 @@ class Database {
     async disconnect() {
         await this.connection?.close();
     }
+
+    get sequelize(){
+        return this.connection;
+    }
+
 }
 
 export default Database;
