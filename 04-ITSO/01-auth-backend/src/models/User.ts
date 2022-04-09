@@ -4,7 +4,10 @@ import PasswordUtils from "../utils/PasswordUtils";
 export default (sequelize: Sequelize) => {
 
     class User extends Model{
-        static associate(models: any){}
+        static associate(models: any){
+            User.hasMany(models["Role"]);
+            User.hasOne(models["RefreshToken"]);
+        }
     }
 
     User.init({
