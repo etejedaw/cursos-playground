@@ -23,7 +23,7 @@ class Database {
         const logging = this.isTestEnvironment ? false : console.log;
         this.connection = new Sequelize(uri, {logging});
         await this.connection.authenticate({logging});
-        if(!this.isTestEnvironment) console.log("Connection has been stablished successfully!");
+        if(!this.isTestEnvironment) console.log("Connection has been stablished successfully to the database!");
         registerModels(this.connection);
         await this.sync();
     }
