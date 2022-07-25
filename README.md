@@ -81,3 +81,11 @@ Ejercicios de cursos tomados en distintos cursos
 * Link: https://www.udemy.com/course/angular-fernando-herrera/
 * Directorio: 10-ADCAE
 * Estado: En Curso
+
+---
+
+- Curso: PyTorch for Deep Learning and Computer Vision
+- Instructor: Rayan Slim, Jad Slim, Amer Sharaf y Sarmad Tanveer
+- Link: https://www.udemy.com/course/pytorch-for-deep-learning-and-computer-vision/
+- Directorio: 11-PDLCV
+- Estado: En Curso
