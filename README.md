@@ -1,6 +1,12 @@
 # Cursos
 
-Ejercicios de cursos tomados en distintos cursos
+Repositorio de ejercicios realizados en cursos y libros.
+
+* Totales: 11
+
+* Finalizados: 5
+
+* En Curso: 6
 
 ****
 
