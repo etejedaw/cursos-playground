@@ -4,9 +4,11 @@ Repositorio de ejercicios realizados en cursos y libros.
 
 * Totales: 11
 
-* Finalizados: 5
+* Finalizados: 6
 
-* En Curso: 6
+* En Curso: 2
+
+* Detenidos: 4
 
 ****
 
@@ -38,7 +40,7 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Instructor: David Armendáriz
 * Link: https://www.udemy.com/course/introduction-to-sequelize-orm-w-expressjs-postgres/
 * Directorio: 04-ITSO
-* Estado: En Curso
+* Estado: Detenido
 
 ****
 
@@ -46,7 +48,7 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Instructor: Stephen Grider
 * Link: https://www.udemy.com/course/advanced-node-for-developers/
 * Directorio: 05-NJAC
-* Estado: En Curso
+* Estado: Finalizado
 
 ****
 
@@ -54,7 +56,7 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Instructor: Stephen Grider
 * Link: https://www.udemy.com/course/docker-and-kubernetes-the-complete-guide/
 * Directorio: 06-DAKTCG
-* Estado: En Curso
+* Estado: Detenido
 
 ****
 
@@ -62,7 +64,7 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Autor: Alexander Shvets
 * Link: https://refactoring.guru/es/design-patterns/book/
 * Directorio: 07-DIDP
-* Estado: En Curso
+* Estado: Detenido
 
 ****
 
@@ -86,7 +88,7 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Instructor: Fernando Herrera
 * Link: https://www.udemy.com/course/angular-fernando-herrera/
 * Directorio: 10-ADCAE
-* Estado: En Curso
+* Estado: Detenido
 
 ---
 
@@ -94,4 +96,12 @@ Repositorio de ejercicios realizados en cursos y libros.
 - Instructor: Rayan Slim, Jad Slim, Amer Sharaf y Sarmad Tanveer
 - Link: https://www.udemy.com/course/pytorch-for-deep-learning-and-computer-vision/
 - Directorio: 11-PDLCV
+- Estado: En Curso
+
+---
+
+- Curso: Nest: Desarrollo backend escalable con Node
+- Instructor: Fernando Herrera
+- Link: https://www.udemy.com/course/pytorch-for-deep-learning-and-computer-vision/
+- Directorio: 12-NDBEN
 - Estado: En Curso
