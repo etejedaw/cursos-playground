@@ -2,13 +2,13 @@
 
 Repositorio de ejercicios realizados en cursos y libros.
 
-* Totales: 11
+* Totales: 12
 
 * Finalizados: 6
 
-* En Curso: 2
+* En Curso: 3
 
-* Detenidos: 4
+* Detenidos: 3
 
 ****
 
@@ -88,7 +88,7 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Instructor: Fernando Herrera
 * Link: https://www.udemy.com/course/angular-fernando-herrera/
 * Directorio: 10-ADCAE
-* Estado: Detenido
+* Estado: En Curso
 
 ---
 
