@@ -3,11 +3,8 @@
 Repositorio de ejercicios realizados en cursos y libros.
 
 * Totales: 12
-
 * Finalizados: 6
-
 * En Curso: 3
-
 * Detenidos: 3
 
 ****
@@ -90,18 +87,18 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Directorio: 10-ADCAE
 * Estado: En Curso
 
----
+****
 
-- Curso: PyTorch for Deep Learning and Computer Vision
-- Instructor: Rayan Slim, Jad Slim, Amer Sharaf y Sarmad Tanveer
-- Link: https://www.udemy.com/course/pytorch-for-deep-learning-and-computer-vision/
-- Directorio: 11-PDLCV
-- Estado: En Curso
+* Curso: PyTorch for Deep Learning and Computer Vision
+* Instructor: Rayan Slim, Jad Slim, Amer Sharaf y Sarmad Tanveer
+* Link: https://www.udemy.com/course/pytorch-for-deep-learning-and-computer-vision/
+* Directorio: 11-PDLCV
+* Estado: En Curso
 
----
+****
 
-- Curso: Nest: Desarrollo backend escalable con Node
-- Instructor: Fernando Herrera
-- Link: https://www.udemy.com/course/pytorch-for-deep-learning-and-computer-vision/
-- Directorio: 12-NDBEN
-- Estado: En Curso
+* Curso: Nest: Desarrollo backend escalable con Node
+* Instructor: Fernando Herrera
+* Link: https://www.udemy.com/course/pytorch-for-deep-learning-and-computer-vision/
+* Directorio: 12-NDBEN
+* Estado: En Curso
