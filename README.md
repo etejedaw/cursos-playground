@@ -99,6 +99,6 @@ Repositorio de ejercicios realizados en cursos y libros.
 
 * Curso: Nest: Desarrollo backend escalable con Node
 * Instructor: Fernando Herrera
-* Link: https://www.udemy.com/course/pytorch-for-deep-learning-and-computer-vision/
+* Link: https://www.udemy.com/course/nest-framework/
 * Directorio: 12-NDBEN
 * Estado: En Curso
