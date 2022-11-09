@@ -2,10 +2,10 @@
 
 Repositorio de ejercicios realizados en cursos y libros.
 
-* Totales: 12
-* Finalizados: 6
-* En Curso: 3
-* Detenidos: 3
+* Totales: 13
+* Finalizados: 7
+* En Curso: 2
+* Detenidos: 4
 
 ****
 
@@ -93,7 +93,7 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Instructor: Rayan Slim, Jad Slim, Amer Sharaf y Sarmad Tanveer
 * Link: https://www.udemy.com/course/pytorch-for-deep-learning-and-computer-vision/
 * Directorio: 11-PDLCV
-* Estado: En Curso
+* Estado: Detenido
 
 ****
 
@@ -101,4 +101,12 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Instructor: Fernando Herrera
 * Link: https://www.udemy.com/course/nest-framework/
 * Directorio: 12-NDBEN
+* Estado: Finalizado
+
+****
+
+* Curso: The Coding Interview Bootcamp: Algorithms + Data Structures
+* Instructor: Stephen Grider
+* Link: https://www.udemy.com/course/coding-interview-bootcamp-algorithms-and-data-structure/
+* Directorio: 13-TCIB
 * Estado: En Curso
