@@ -7,40 +7,31 @@ import {
   Param,
   Delete,
   Query,
+  HttpCode,
+  HttpException,
+  HttpStatus,
+  ParseIntPipe,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
+import { SlugPipe } from './pipes/slug/slug.pipe';
 
 @ApiTags('courses')
+@ApiBearerAuth()
 @Controller('courses')
 export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}
 
   @Post()
-  create(@Body() createCourseDto: CreateCourseDto) {
-    return this.coursesService.create(createCourseDto);
+  @HttpCode(201)
+  create(@Body() course: CreateCourseDto) {
+    return this.coursesService.create(course);
   }
 
-  @Get()
-  findAll(@Query() query: string) {
-    console.log(query);
-    return this.coursesService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.coursesService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCourseDto: UpdateCourseDto) {
-    return this.coursesService.update(+id, updateCourseDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.coursesService.remove(+id);
+  @Get(':title')
+  find(@Param('title', SlugPipe) title: string) {
+    return this.coursesService.findOne(title.length);
   }
 }

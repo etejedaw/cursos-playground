@@ -4,6 +4,6 @@ import { VideosController } from './videos.controller';
 
 @Module({
   controllers: [VideosController],
-  providers: [VideosService]
+  providers: [VideosService],
 })
 export class VideosModule {}
