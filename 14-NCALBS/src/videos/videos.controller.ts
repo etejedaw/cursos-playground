@@ -16,12 +16,16 @@ import { ApiTags } from '@nestjs/swagger';
 import { LoggerInterceptor } from 'src/utils/logger/logger.interceptor';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { storage } from 'src/utils/media/media.handler';
+import { CoursesService } from 'src/courses/courses.service';
 
 @ApiTags('videos')
 @UseInterceptors(LoggerInterceptor)
 @Controller('videos')
 export class VideosController {
-  constructor(private readonly videosService: VideosService) {}
+  constructor(
+    private readonly videosService: VideosService,
+    private readonly coursesService: CoursesService,
+  ) {}
 
   @Post()
   create(@Body() createVideoDto: CreateVideoDto) {
