@@ -6,11 +6,13 @@ import { LoginAuthDto } from './dto/login-auth-dto';
 import { RegisterAuthDto } from './dto/register-auth.dto';
 import { compareHash, generateHash } from './utils/handleBcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
+    private readonly eventEmitter: EventEmitter2,
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
   ) {}
 
@@ -42,6 +44,10 @@ export class AuthService {
       ...user,
       password: await generateHash(password),
     };
-    return this.userModel.create(userParse);
+    const newUser = await this.userModel.create(userParse);
+
+    this.eventEmitter.emit('user.created', newUser);
+
+    return newUser;
   }
 }

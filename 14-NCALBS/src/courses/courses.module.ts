@@ -1,9 +1,10 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { CoursesService } from './courses.service';
 import { CoursesController } from './courses.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Course, CourseSchema } from './schema/courses.scheme';
 import { User, UserSchema } from 'src/users/schema/user.schema';
+import { PaginationMiddleware } from 'src/pagination/pagination.middleware';
 
 @Module({
   imports: [
@@ -17,9 +18,27 @@ import { User, UserSchema } from 'src/users/schema/user.schema';
         schema: UserSchema,
       },
     ]),
+    MongooseModule.forFeatureAsync([
+      {
+        name: Course.name,
+        useFactory: () => {
+          const schema = CourseSchema;
+          // eslint-disable-next-line @typescript-eslint/no-var-requires
+          schema.plugin(require('mongoose-paginate-v2'));
+          return schema;
+        },
+      },
+    ]),
   ],
   controllers: [CoursesController],
   providers: [CoursesService],
   exports: [CoursesService],
 })
-export class CoursesModule {}
+export class CoursesModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(PaginationMiddleware).forRoutes({
+      path: 'v1/courses',
+      method: RequestMethod.GET,
+    });
+  }
+}

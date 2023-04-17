@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, Length, IsUrl } from 'class-validator';
 
 export class CreateVideoDto {
@@ -9,6 +10,7 @@ export class CreateVideoDto {
   @Length(1, 50)
   description: string;
 
-  @IsUrl()
-  src: string;
+  @ApiProperty()
+  @IsNotEmpty()
+  idCourse: string;
 }

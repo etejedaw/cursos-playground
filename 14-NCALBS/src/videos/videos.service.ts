@@ -23,4 +23,8 @@ export class VideosService {
   remove(id: number) {
     return `This action removes a #${id} video`;
   }
+
+  addVideo(id: string, fileName: string) {
+    return 'This action adds a new video';
+  }
 }

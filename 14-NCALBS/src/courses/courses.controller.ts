@@ -25,6 +25,7 @@ import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { SlugPipe } from './pipes/slug/slug.pipe';
+import { Paginate } from 'src/paginate/paginate.decorator';
 
 @ApiTags('courses')
 @ApiBearerAuth()
@@ -43,6 +44,33 @@ export class CoursesController {
   @Get(':title')
   @Rol(['admin', 'manager'])
   find(@Param('title', SlugPipe) title: string) {
-    return this.coursesService.findOne(title.length);
+    return this.coursesService.findOne(title);
+  }
+
+  @Get('')
+  @HttpCode(200)
+  @Rol(['admin', 'user', 'manager'])
+  getListCourses(@Paginate() paginate: any) {
+    return this.coursesService.findAll(paginate);
+  }
+
+  @Get(':id')
+  @HttpCode(200)
+  @Rol(['admin', 'user', 'manager'])
+  getDetail(@Param('id') id: string) {
+    return this.coursesService.findOne(id);
+  }
+
+  @Patch(':id')
+  @HttpCode(200)
+  @Rol(['admin', 'user', 'manager'])
+  updateDetail(@Param('id') id: string, @Body() body: UpdateCourseDto) {
+    return this.coursesService.update(id, body);
+  }
+
+  @Delete(':id')
+  @Rol(['admin'])
+  deleteCourse(@Param('id') id: string) {
+    return this.coursesService.remove(id);
   }
 }

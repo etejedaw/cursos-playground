@@ -10,6 +10,10 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { UsersModule } from './users/users.module';
 import { MongooseModule } from '@nestjs/mongoose';
+import { EventMailModule } from './event-mail/event-mail.module';
+import { EventEmitter } from 'stream';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -19,12 +23,15 @@ import { MongooseModule } from '@nestjs/mongoose';
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
     }),
+    EventEmitterModule.forRoot(),
     MongooseModule.forRoot(process.env.DB_URI!),
     CoursesModule,
     AuthModule,
     VideosModule,
     AwardsModule,
     UsersModule,
+    EventMailModule,
+    MailModule,
   ],
   controllers: [AppController],
   providers: [AppService],
