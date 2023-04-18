@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { CacheModule, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CoursesModule } from './courses/courses.module';
@@ -11,9 +11,9 @@ import { join } from 'path';
 import { UsersModule } from './users/users.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { EventMailModule } from './event-mail/event-mail.module';
-import { EventEmitter } from 'stream';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MailModule } from './mail/mail.module';
+import { SocketProvider } from './providers/socket-provider/socket-provider';
 
 @Module({
   imports: [
@@ -22,6 +22,11 @@ import { MailModule } from './mail/mail.module';
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
+    }),
+    CacheModule.register({
+      ttl: 3600,
+      max: 1000,
+      isGlobal: true,
     }),
     EventEmitterModule.forRoot(),
     MongooseModule.forRoot(process.env.DB_URI!),
@@ -34,6 +39,6 @@ import { MailModule } from './mail/mail.module';
     MailModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, SocketProvider],
 })
 export class AppModule {}

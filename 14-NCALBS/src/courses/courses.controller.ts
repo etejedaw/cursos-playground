@@ -14,11 +14,12 @@ import {
   UseGuards,
   Req,
   SetMetadata,
+  UseInterceptors,
+  CacheInterceptor,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { Rol } from 'src/decorators/rol/rol.decorator';
-import { BrowserAgentGuard } from 'src/guards/browser-agent/browser-agent.guard';
 import { JwtGuardGuard } from 'src/guards/jwt-guard/jwt-guard.guard';
 import { RolesGuardGuard } from 'src/guards/roles-guard/roles-guard.guard';
 import { CoursesService } from './courses.service';
@@ -50,6 +51,7 @@ export class CoursesController {
   @Get('')
   @HttpCode(200)
   @Rol(['admin', 'user', 'manager'])
+  @UseInterceptors(CacheInterceptor)
   getListCourses(@Paginate() paginate: any) {
     return this.coursesService.findAll(paginate);
   }

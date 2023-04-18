@@ -1,5 +1,4 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { ObjectId } from 'mongoose';
 import { v4 as uuid } from 'uuid';
 
 export type VideoDocument = Video & Document;

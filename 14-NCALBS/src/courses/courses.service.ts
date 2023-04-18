@@ -25,8 +25,8 @@ export class CoursesService {
   }
 
   async findAll(pagination: any) {
-    const listPaginate = this.courseModel.paginate({}, pagination);
-    const list = listPaginate.docs.aggregate([
+    // const listPaginate = this.courseModel.paginate({}, pagination);
+    const list = this.courseModel.aggregate([
       {
         $lookup: {
           from: 'users',
