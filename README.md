@@ -2,10 +2,10 @@
 
 Repositorio de ejercicios realizados en cursos y libros.
 
-* Totales: 14
+* Totales: 12
 * Finalizados: 8
-* En Curso: 2
-* Detenidos: 4
+* En Curso: 3
+* Detenidos: 1
 
 ****
 
@@ -37,7 +37,7 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Instructor: David Armendáriz
 * Link: https://www.udemy.com/course/introduction-to-sequelize-orm-w-expressjs-postgres/
 * Directorio: 04-ITSO
-* Estado: Detenido
+* Estado: En Curso
 
 ****
 
@@ -53,14 +53,6 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Instructor: Stephen Grider
 * Link: https://www.udemy.com/course/docker-and-kubernetes-the-complete-guide/
 * Directorio: 06-DAKTCG
-* Estado: Detenido
-
-****
-
-* Libro: Sumérgete en los patrones de diseño
-* Autor: Alexander Shvets
-* Link: https://refactoring.guru/es/design-patterns/book/
-* Directorio: 07-DIDP
 * Estado: Detenido
 
 ****
@@ -85,14 +77,6 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Instructor: Fernando Herrera
 * Link: https://www.udemy.com/course/angular-fernando-herrera/
 * Directorio: 10-ADCAE
-* Estado: En Curso
-
-****
-
-* Curso: PyTorch for Deep Learning and Computer Vision
-* Instructor: Rayan Slim, Jad Slim, Amer Sharaf y Sarmad Tanveer
-* Link: https://www.udemy.com/course/pytorch-for-deep-learning-and-computer-vision/
-* Directorio: 11-PDLCV
 * Estado: Detenido
 
 ****
