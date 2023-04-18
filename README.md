@@ -4,8 +4,8 @@ Repositorio de ejercicios realizados en cursos y libros.
 
 * Totales: 12
 * Finalizados: 8
-* En Curso: 3
-* Detenidos: 1
+* En Curso: 2
+* Detenidos: 2
 
 ****
 
