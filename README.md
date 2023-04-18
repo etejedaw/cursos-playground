@@ -2,8 +2,8 @@
 
 Repositorio de ejercicios realizados en cursos y libros.
 
-* Totales: 13
-* Finalizados: 7
+* Totales: 14
+* Finalizados: 8
 * En Curso: 2
 * Detenidos: 4
 
@@ -110,3 +110,12 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Link: https://www.udemy.com/course/coding-interview-bootcamp-algorithms-and-data-structure/
 * Directorio: 13-TCIB
 * Estado: En Curso
+
+****
+
+* Curso: NestJS: Creando aplicación del lado del Backend con Socket
+* Instructor: Leifer Mendez
+* Link: https://www.udemy.com/course/curso-nestjs-backend/
+* Directorio: 14-NCALBS
+* Estado: Finalizado
+
