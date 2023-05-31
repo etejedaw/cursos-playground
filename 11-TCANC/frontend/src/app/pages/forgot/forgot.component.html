@@ -1,0 +1,12 @@
+<form class="form-signin" [formGroup]="form" (submit)="submit()">
+    
+    <div *ngIf="cls" class="alert alert-{{cls}}" role="alert">
+        {{message}}
+    </div>
+
+    <h1 class="h3 mb-3 font-weight-normal">Please set yot email</h1>
+
+    <input formControlName="email" type="email" class="form-control mb-3" placeholder="Email address" required>
+
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
+  </form>

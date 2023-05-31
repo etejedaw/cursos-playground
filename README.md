@@ -2,9 +2,9 @@
 
 Repositorio de ejercicios realizados en cursos y libros.
 
-* Totales: 12
+* Totales: 11
 * Finalizados: 8
-* En Curso: 2
+* En Curso: 1
 * Detenidos: 2
 
 ****
@@ -30,14 +30,6 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Link: https://www.udemy.com/course/web-scraping-in-nodejs/
 * Directorio: 03-WSINJ
 * Estado: Finalizado
-
-****
-
-* Curso: Introduction to Sequelize ORM (w/ Express.js + Postgres)
-* Instructor: David Armendáriz
-* Link: https://www.udemy.com/course/introduction-to-sequelize-orm-w-expressjs-postgres/
-* Directorio: 04-ITSO
-* Estado: En Curso
 
 ****
 
