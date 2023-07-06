@@ -2,9 +2,9 @@
 
 Repositorio de ejercicios realizados en cursos y libros.
 
-* Totales: 11
+* Totales: 12
 * Finalizados: 8
-* En Curso: 1
+* En Curso: 2
 * Detenidos: 2
 
 ****
@@ -30,6 +30,14 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Link: https://www.udemy.com/course/web-scraping-in-nodejs/
 * Directorio: 03-WSINJ
 * Estado: Finalizado
+
+****
+
+* Curso: Serverless Framework Bootcamp: Node.js, AWS & Microservices
+* Instructor: Ariel Weinberger
+* Link: https://www.udemy.com/course/serverless-framework
+* Directorio: 04-SFB
+* Estado En Curso
 
 ****
 
