@@ -12,7 +12,7 @@ import { UserModule } from './user/user.module';
       port: 3306,
       username: 'root',
       password: 'toor',
-      database: 'admin',
+      database: 'mariadb',
       autoLoadEntities: true,
       synchronize: true,
     }),
