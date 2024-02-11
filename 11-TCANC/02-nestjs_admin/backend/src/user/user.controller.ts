@@ -8,6 +8,7 @@ import {
 	Post,
 	Put,
 	Query,
+	Req,
 	UseGuards,
 	UseInterceptors,
 } from '@nestjs/common';
@@ -17,15 +18,22 @@ import * as bcrypt from 'bcrypt';
 import { UserCreateDto } from './models/user-create.dto';
 import { UserUpdateDto } from './models/user-update.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
+import { AuthService } from 'src/auth/auth.service';
+import { Request } from 'express';
+import { HasPermission } from 'src/permission/has-permission.decorator';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @UseGuards(AuthGuard)
 @Controller('users')
 export class UserController {
-	constructor(private userService: UserService) {}
+	constructor(
+		private userService: UserService,
+		private authService: AuthService,
+	) {}
 
 	@Get()
-	async all(@Query('page') page: number = 1): Promise<User[]> {
+	@HasPermission('users')
+	async all(@Query('page') page = 1): Promise<User[]> {
 		return this.userService.paginate(page);
 	}
 
@@ -37,6 +45,7 @@ export class UserController {
 			lastName: body.lastName,
 			email: body.email,
 			password,
+			role: { id: body.role_id },
 		});
 	}
 
@@ -45,9 +54,31 @@ export class UserController {
 		return this.userService.findOne({ id });
 	}
 
-	@Put('id')
-	async update(@Param('id') id: number, @Body() body: UserUpdateDto) {
+	@Put('info')
+	async updateInfo(@Req() request: Request, @Body() body: UserUpdateDto) {
+		const id = await this.authService.userId(request);
 		await this.userService.update(id, body);
+		return this.userService.findOne({ id });
+	}
+
+	@Put('password')
+	async updatePassword(
+		@Req() request: Request,
+		@Body('password') password: string,
+	) {
+		const id = await this.authService.userId(request);
+		const hashed = await bcrypt.hash(password, 12);
+		await this.userService.update(id, { password: hashed });
+		return this.userService.findOne({ id });
+	}
+
+	@Put(':id')
+	async update(@Param('id') id: number, @Body() body: UserUpdateDto) {
+		const { role_id, ...data } = body;
+		await this.userService.update(id, {
+			...data,
+			role: { _id: role_id },
+		});
 		return this.userService.findOne({ id });
 	}
 

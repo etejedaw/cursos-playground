@@ -1,6 +1,5 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Observable } from 'rxjs';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -12,7 +11,7 @@ export class AuthGuard implements CanActivate {
 			const jwt = request.cookies['jwt'];
 			return this.jwtService.verify(jwt);
 		} catch (error) {
-			return false;
+			console.log(error);
 		}
 	}
 }
