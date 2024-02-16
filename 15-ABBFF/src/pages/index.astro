@@ -1,10 +1,11 @@
 ---
 import Main from "../layouts/Main.astro";
+import Cards from "../components/Cards.astro";
 const profilePicture =
 	"https://wallpapers-clan.com/wp-content/uploads/2022/11/god-of-war-kratos-pfp-1.jpg";
 ---
 
-<Main>
+<Main title="Kratos">
 	<div class="profile">
 		<img
 			width="100px"
@@ -27,6 +28,29 @@ const profilePicture =
 			</p>
 		</div>
 	</div>
+
+	<Cards
+		cards={[
+			{
+				title: "Forjando conocimiento mítico",
+				gradientFrom: "#818cf8",
+				gradientTo: "#d8b4fr",
+				to: "/education"
+			},
+			{
+				title: "Desafiando lo inimaginable",
+				gradientFrom: "#fde68a",
+				gradientTo: "#fca5a5",
+				to: "/achievements"
+			},
+			{
+				title: "En construcción...",
+				gradientFrom: "#6ee7b7",
+				gradientTo: "#9333ea",
+				to: "/#	"
+			}
+		]}
+	/>
 </Main>
 
 <style>

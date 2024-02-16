@@ -1,0 +1,51 @@
+---
+import type { MarkdownLayoutProps } from "astro";
+import Main from "./Main.astro";
+
+interface Props
+	extends MarkdownLayoutProps<{
+		title: string;
+		subtitle: string;
+		poster: string;
+	}> {}
+
+const { title, subtitle, poster } = Astro.props.frontmatter;
+---
+
+<Main title="Kratos | Blog">
+	<figure class="figure">
+		<img
+			src={poster}
+			alt=""
+			width="100%"
+			height="480px"
+			class="figure-image"
+		/>
+		<figcaption class="figure-caption">
+			Poster image for {title.toLowerCase()}
+		</figcaption>
+
+		<h1>{title}</h1>
+		<h2>{subtitle}</h2>
+	</figure>
+	<slot />
+</Main>
+
+<style>
+	h1 + h2 {
+		margin-bottom: 3rem;
+	}
+
+	.figure {
+		margin: 0;
+	}
+
+	.figure-image {
+		max-width: 100%;
+		border-radius: 10px;
+	}
+
+	.figure-caption {
+		font-size: 0.9rem;
+	}
+</style>
