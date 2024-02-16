@@ -2,10 +2,10 @@
 
 Repositorio de ejercicios realizados en cursos y libros.
 
-* Totales: 15
+* Totales: 14
 * Finalizados: 8
-* En Curso: 4
-* Detenidos: 2
+* En Curso: 2
+* Detenidos: 4
 
 ****
 
@@ -33,14 +33,6 @@ Repositorio de ejercicios realizados en cursos y libros.
 
 ****
 
-* Curso: Serverless Framework Bootcamp: Node.js, AWS & Microservices
-* Instructor: Ariel Weinberger
-* Link: https://www.udemy.com/course/serverless-framework
-* Directorio: [04-SFB](04-SFB)
-* Estado En Curso
-
-****
-
 * Curso: Node JS: Advanced Concepts
 * Instructor: Stephen Grider
 * Link: https://www.udemy.com/course/advanced-node-for-developers/
@@ -53,6 +45,14 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Instructor: Stephen Grider
 * Link: https://www.udemy.com/course/docker-and-kubernetes-the-complete-guide/
 * Directorio: [06-DAKTCG](06-DAKTCG)
+* Estado: Detenido
+
+****
+
+* Libro: Sumérgete en los PATRONES de DISEÑO
+* Escritor: Alexander Shvets
+* Link: https://refactoring.guru/es/design-patterns/book
+* Directorio [01-DIDP](07-OTROS/01-DIDP)
 * Estado: Detenido
 
 ****
@@ -101,7 +101,7 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Instructor: Stephen Grider
 * Link: https://www.udemy.com/course/coding-interview-bootcamp-algorithms-and-data-structure/
 * Directorio: [13-TCIB](13-TCIB)
-* Estado: En Curso
+* Estado: Detenido
 
 ****
 
