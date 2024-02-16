@@ -2,9 +2,9 @@
 
 Repositorio de ejercicios realizados en cursos y libros.
 
-* Totales: 13
+* Totales: 15
 * Finalizados: 8
-* En Curso: 3
+* En Curso: 4
 * Detenidos: 2
 
 ****
@@ -111,3 +111,10 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Directorio: 14-NCALBS
 * Estado: Finalizado
 
+****
+
+* Curso: AstroJS 101: Build Blazing Fast Frontends!
+* Instructor: Ohans Emmanuel
+* Link: https://www.udemy.com/course/astrojs-101-build-blazing-fast-frontends/
+* Directorio: 15-ABBFF
+* Estado: En Curso
