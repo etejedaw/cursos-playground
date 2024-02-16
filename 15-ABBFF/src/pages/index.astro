@@ -1,0 +1,52 @@
+---
+import Main from "../layouts/Main.astro";
+const profilePicture =
+	"https://wallpapers-clan.com/wp-content/uploads/2022/11/god-of-war-kratos-pfp-1.jpg";
+---
+
+<Main>
+	<div class="profile">
+		<img
+			width="100px"
+			height="100px"
+			class="profile-picture"
+			src={profilePicture}
+		/>
+		<div class="profile-details">
+			<h1>Kratos</h1>
+			<h2>Guerrero Legendario y Destructor de Dioses</h2>
+			<p>
+				Experimentado guerrero con una vasta trayectoria en la
+				eliminación de amenazas divinas y la superación de desafíos
+				mitológicos. He demostrado habilidades excepcionales en el
+				combate cuerpo a cuerpo, estrategia táctica y resiliencia en
+				situaciones adversas. Mi carrera ha estado marcada por la
+				consecución de hazañas extraordinarias, incluyendo la
+				aniquilación de diversos dioses y la superación de traiciones
+				devastadoras.
+			</p>
+		</div>
+	</div>
+</Main>
+
+<style>
+	.profile {
+		display: flex;
+		align-items: flex-start;
+		flex-wrap: wrap;
+		padding: 1rem 0 3rem 0;
+	}
+
+	.profile-details {
+		flex: 1 0 300px;
+	}
+
+	.profile-details > h1 {
+		margin-top: 0;
+	}
+
+	.profile-picture {
+		border-radius: 50%;
+		margin: 0 2rem 1rem 0;
+	}
+</style>
