@@ -12,7 +12,7 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Curso: Node - De cero a experto 
 * Instructor: Fernando Herrera
 * Link: https://www.udemy.com/course/node-de-cero-a-experto/
-* Directorio: 01-NDCAE
+* Directorio: [01-NDCAE](01-NDCAE)
 * Estado: Finalizado
 
 ****
@@ -20,7 +20,7 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Curso: NodeJS - The Complete Guide (MVC, REST APIs, GraphQL, Deno) 
 * Instructor: Maximilian Schwarzmüller
 * Link: https://www.udemy.com/course/nodejs-the-complete-guide/
-* Directorio: 02-NTCG
+* Directorio: [02-NTCG](02-NTCG)
 * Estado: Finalizado
 
 ****
@@ -28,7 +28,7 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Curso: Web Scraping in Nodejs & JavaScript 
 * Instructor: Stefan Hyltoft
 * Link: https://www.udemy.com/course/web-scraping-in-nodejs/
-* Directorio: 03-WSINJ
+* Directorio: [03-WSINJ](03-WSINJ)
 * Estado: Finalizado
 
 ****
@@ -36,7 +36,7 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Curso: Serverless Framework Bootcamp: Node.js, AWS & Microservices
 * Instructor: Ariel Weinberger
 * Link: https://www.udemy.com/course/serverless-framework
-* Directorio: 04-SFB
+* Directorio: [04-SFB](04-SFB)
 * Estado En Curso
 
 ****
@@ -44,7 +44,7 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Curso: Node JS: Advanced Concepts
 * Instructor: Stephen Grider
 * Link: https://www.udemy.com/course/advanced-node-for-developers/
-* Directorio: 05-NJAC
+* Directorio: [05-NJAC](05-NJAC)
 * Estado: Finalizado
 
 ****
@@ -52,7 +52,7 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Curso: Docker and Kubernetes: The Complete Guide 
 * Instructor: Stephen Grider
 * Link: https://www.udemy.com/course/docker-and-kubernetes-the-complete-guide/
-* Directorio: 06-DAKTCG
+* Directorio: [06-DAKTCG](06-DAKTCG)
 * Estado: Detenido
 
 ****
@@ -60,7 +60,7 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Libro: You Don't Know JS Yet Collection
 * Autor: Kyle Simpson
 * Link: https://www.amazon.com/-/es/Kyle-Simpson-ebook/dp/B084BNMN7T
-* Directorio: 08-YDKJY
+* Directorio: [08-YDKJY](08-YDKJY)
 * Estado: Finalizado
 
 ****
@@ -68,7 +68,7 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Curso: Angular 11 - La Guia Completa + 15 Proyectos 
 * Instructor: Tomas Ruiz Diaz
 * Link: https://www.udemy.com/course/angular-10-fundamentos-8-app/
-* Directorio: 09-ALGC
+* Directorio: [09-ALGC](09-ALGC)
 * Estado: Finalizado
 
 ****
@@ -76,7 +76,7 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Curso: Angular - De cero a experto
 * Instructor: Fernando Herrera
 * Link: https://www.udemy.com/course/angular-fernando-herrera/
-* Directorio: 10-ADCAE
+* Directorio: [10-ADCAE](10-ADCAE)
 * Estado: Detenido
 
 ****
@@ -84,7 +84,7 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Curso: The Complete Angular & NestJS Course
 * Instructor: Antonio Papa
 * Link: https://www.udemy.com/course/the-complete-angular-nestjs-course/
-* Directorio: 11-TCANC
+* Directorio: [11-TCANC](11-TCANC)
 * Estado: En Curso
 
 ****
@@ -92,7 +92,7 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Curso: Nest: Desarrollo backend escalable con Node
 * Instructor: Fernando Herrera
 * Link: https://www.udemy.com/course/nest-framework/
-* Directorio: 12-NDBEN
+* Directorio: [12-NDBEN](12-NDBEN)
 * Estado: Finalizado
 
 ****
@@ -100,7 +100,7 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Curso: The Coding Interview Bootcamp: Algorithms + Data Structures
 * Instructor: Stephen Grider
 * Link: https://www.udemy.com/course/coding-interview-bootcamp-algorithms-and-data-structure/
-* Directorio: 13-TCIB
+* Directorio: [13-TCIB](13-TCIB)
 * Estado: En Curso
 
 ****
@@ -108,7 +108,7 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Curso: NestJS: Creando aplicación del lado del Backend con Socket
 * Instructor: Leifer Mendez
 * Link: https://www.udemy.com/course/curso-nestjs-backend/
-* Directorio: 14-NCALBS
+* Directorio: [14-NCALBS](14-NCALBS)
 * Estado: Finalizado
 
 ****
@@ -116,5 +116,5 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Curso: AstroJS 101: Build Blazing Fast Frontends!
 * Instructor: Ohans Emmanuel
 * Link: https://www.udemy.com/course/astrojs-101-build-blazing-fast-frontends/
-* Directorio: 15-ABBFF
+* Directorio: [15-ABBFF](15-ABBFF)
 * Estado: En Curso
