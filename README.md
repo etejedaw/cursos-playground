@@ -60,7 +60,7 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Libro: You Don't Know JS Yet Collection
 * Autor: Kyle Simpson
 * Link: https://www.amazon.com/-/es/Kyle-Simpson-ebook/dp/B084BNMN7T
-* Directorio: [08-YDKJY](08-YDKJY)
+* Directorio: [02-YDKJY](07-OTROS/02-YDKJY)
 * Estado: Finalizado
 
 ****
