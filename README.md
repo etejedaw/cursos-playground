@@ -4,7 +4,7 @@ Repositorio de ejercicios realizados en cursos y libros.
 
 * Totales: 14
 * Finalizados: 8
-* En Curso: 2
+* En Curso: 3
 * Detenidos: 4
 
 ****
@@ -65,6 +65,14 @@ Repositorio de ejercicios realizados en cursos y libros.
 
 ****
 
+* Curso: NestJS: The Complete Developer's Guide
+* Instructor: Stephen Grider
+* Link: https://www.udemy.com/course/nestjs-the-complete-developers-guide/
+* Directorio: [08-NTCDG](08-NTCDG)
+* Estado En Curso
+
+****
+
 * Curso: Angular 11 - La Guia Completa + 15 Proyectos 
 * Instructor: Tomas Ruiz Diaz
 * Link: https://www.udemy.com/course/angular-10-fundamentos-8-app/
@@ -118,3 +126,4 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Link: https://www.udemy.com/course/astrojs-101-build-blazing-fast-frontends/
 * Directorio: [15-ABBFF](15-ABBFF)
 * Estado: En Curso
+
