@@ -2,9 +2,9 @@
 
 Repositorio de ejercicios realizados en cursos y libros.
 
-* Totales: 14
+* Totales: 15
 * Finalizados: 8
-* En Curso: 3
+* En Curso: 2
 * Detenidos: 4
 
 ****
@@ -69,7 +69,7 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Instructor: Stephen Grider
 * Link: https://www.udemy.com/course/nestjs-the-complete-developers-guide/
 * Directorio: [08-NTCDG](08-NTCDG)
-* Estado En Curso
+* Estado: Finalizado
 
 ****
 
