@@ -2,9 +2,9 @@
 
 Repositorio de ejercicios realizados en cursos y libros.
 
-* Totales: 15
+* Totales: 16
 * Finalizados: 8
-* En Curso: 2
+* En Curso: 3
 * Detenidos: 4
 
 ****
@@ -127,3 +127,10 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Directorio: [15-ABBFF](15-ABBFF)
 * Estado: En Curso
 
+****
+
+* Curso: NestJS + Microservicios: Aplicaciones escalables y modulares
+* Instructor: Fernando Herrera
+* Link: https://www.udemy.com/course/nestjs-microservicios/
+* Directorio: [16-NMAEM](16-NMAEM)
+* Estado: En Curso
