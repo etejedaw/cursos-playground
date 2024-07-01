@@ -2,6 +2,7 @@
   "compilerOptions": {
     "strict": true,
     "strictPropertyInitialization": false,
+    "strictNullChecks": false,
     "module": "commonjs",
     "declaration": true,
     "removeComments": true,
