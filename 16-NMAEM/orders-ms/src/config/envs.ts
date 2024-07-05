@@ -4,10 +4,6 @@ import { z } from 'zod';
 const Envs = z
   .object({
     PORT: z.string().transform(Number),
-    PRODUCT_MICROSERVICE_HOST: z.string(),
-    PRODUCT_MICROSERVICE_PORT: z.string().transform(Number),
-    ORDER_MICROSERVICE_HOST: z.string(),
-    ORDER_MICROSERVICE_PORT: z.string().transform(Number),
   })
   .readonly();
 
