@@ -2,9 +2,9 @@
 
 Repositorio de ejercicios realizados en cursos y libros.
 
-* Totales: 16
+* Totales: 14
 * Finalizados: 8
-* En Curso: 3
+* En Curso: 2
 * Detenidos: 4
 
 ****
@@ -86,14 +86,6 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Link: https://www.udemy.com/course/angular-fernando-herrera/
 * Directorio: [10-ADCAE](10-ADCAE)
 * Estado: Detenido
-
-****
-
-* Curso: The Complete Angular & NestJS Course
-* Instructor: Antonio Papa
-* Link: https://www.udemy.com/course/the-complete-angular-nestjs-course/
-* Directorio: [11-TCANC](11-TCANC)
-* Estado: En Curso
 
 ****
 
