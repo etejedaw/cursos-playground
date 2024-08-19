@@ -2,10 +2,10 @@
 
 Repositorio de ejercicios realizados en cursos y libros.
 
-* Totales: 14
-* Finalizados: 8
-* En Curso: 2
-* Detenidos: 4
+* Totales: 15
+* Finalizados: 9
+* En Curso: 1
+* Detenidos: 5
 
 ****
 
@@ -52,7 +52,7 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Libro: Sumérgete en los PATRONES de DISEÑO
 * Escritor: Alexander Shvets
 * Link: https://refactoring.guru/es/design-patterns/book
-* Directorio [01-DIDP](07-OTROS/01-DIDP)
+* Directorio [Libros/01-DIDP](07-OTROS/01-DIDP)
 * Estado: Detenido
 
 ****
@@ -60,7 +60,7 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Libro: You Don't Know JS Yet Collection
 * Autor: Kyle Simpson
 * Link: https://www.amazon.com/-/es/Kyle-Simpson-ebook/dp/B084BNMN7T
-* Directorio: [02-YDKJY](07-OTROS/02-YDKJY)
+* Directorio: [Libros/02-YDKJSY](07-OTROS/02-YDKJSY)
 * Estado: Finalizado
 
 ****
@@ -85,7 +85,7 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Instructor: Fernando Herrera
 * Link: https://www.udemy.com/course/angular-fernando-herrera/
 * Directorio: [10-ADCAE](10-ADCAE)
-* Estado: Detenido
+* Estado: En Curso
 
 ****
 
@@ -117,7 +117,7 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Instructor: Ohans Emmanuel
 * Link: https://www.udemy.com/course/astrojs-101-build-blazing-fast-frontends/
 * Directorio: [15-ABBFF](15-ABBFF)
-* Estado: En Curso
+* Estado: Detenido
 
 ****
 
@@ -125,4 +125,4 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Instructor: Fernando Herrera
 * Link: https://www.udemy.com/course/nestjs-microservicios/
 * Directorio: [16-NMAEM](16-NMAEM)
-* Estado: En Curso
+* Estado: Detenido
