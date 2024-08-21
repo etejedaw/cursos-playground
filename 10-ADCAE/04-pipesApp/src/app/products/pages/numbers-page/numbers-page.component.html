@@ -1,0 +1,44 @@
+<p-panel header="Pipes Básicos Numéricos" class="p-1">
+    <p>Pipes incluídos en Angular - Usualmente en el Common Module</p>
+</p-panel>
+
+
+<div class="grid mt-2">
+
+    <div class="col-6">
+        <p-card header="Número Original"> {{total}} | pipe </p-card>
+    </div>
+
+    <div class="col-6">
+        <p-card header="number"> {{total | number}} </p-card>
+    </div>
+
+    <div class="col-6">
+        <p-card header="number:'1.2-2'"> {{total | number:'1.2-2'}} </p-card>
+    </div>
+
+    <div class="col-6">
+        <p-card header="currency"> {{total | currency}} </p-card>
+    </div>
+
+    <div class="col-6">
+        <p-card header="currency:'CLP':'symbol-narrow'"> {{total | currency:'CLP':'symbol-narrow'}} </p-card>
+    </div>
+
+</div>
+
+<div class="grid mt-2">
+
+    <div class="col-6">
+        <p-card header="Porcenaje Original"> {{percent}} | pipe </p-card>
+    </div>
+
+    <div class="col-6">
+        <p-card header="percent"> {{percent | percent}} </p-card>
+    </div>
+
+    <div class="col-6">
+        <p-card header="percent:'1.1-2'"> {{percent | percent:'1.1-2'}} </p-card>
+    </div>
+
+</div>
