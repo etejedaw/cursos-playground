@@ -1,7 +1,7 @@
 {
   "usuarios": [
     {
-      "id": 1,
+      "id": "1",
       "usuario": "John Doe",
       "email": "john.due@gmail.com"
     }
@@ -157,7 +157,8 @@
       "publisher": "Marvel Comics",
       "alter_ego": "Scott Summers",
       "first_appearance": "X-Men #1",
-      "characters": "Scott Summers"
+      "characters": "Scott Summers",
+      "alt_img": null
     },
     {
       "id": "marvel-silver",
