@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { AuthService } from '../../../auth/services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-layout-page',
@@ -11,4 +13,18 @@ export class LayoutPageComponent {
     { label: 'Añadir', icon: 'add', url: 'new-hero' },
     { label: 'Buscar', icon: 'search', url: 'search' },
   ];
+
+  constructor(
+    private readonly authService: AuthService,
+    private readonly router: Router
+  ) {}
+
+  onLogout() {
+    this.authService.logout();
+    this.router.navigate(['/auth/login']);
+  }
+
+  get user() {
+    return this.authService.currentUser;
+  }
 }

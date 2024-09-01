@@ -1,8 +1,8 @@
 {
   "usuarios": [
     {
-      "id": "1",
-      "usuario": "John Doe",
+      "id": 1,
+      "user": "John Doe",
       "email": "john.due@gmail.com"
     }
   ],
