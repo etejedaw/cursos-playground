@@ -126,3 +126,11 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Link: https://www.udemy.com/course/nestjs-microservicios/
 * Directorio: [16-NMAEM](16-NMAEM)
 * Estado: Detenido
+
+****
+
+* Curso: TDD Fundamentals in TypeScript
+* Instructor: DevFluence
+* Link: https://www.udemy.com/course/tdd-fundamentals-in-typescript/
+* Directortio: [17-TFT](17-TFT)
+* Estado: En Curso
