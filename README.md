@@ -3,8 +3,8 @@
 Repositorio de ejercicios realizados en cursos y libros.
 
 * Totales: 15
-* Finalizados: 9
-* En Curso: 1
+* Finalizados: 10
+* En Curso: 0
 * Detenidos: 5
 
 ****
@@ -133,4 +133,4 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Instructor: DevFluence
 * Link: https://www.udemy.com/course/tdd-fundamentals-in-typescript/
 * Directortio: [17-TFT](17-TFT)
-* Estado: En Curso
+* Estado: Finalizado
