@@ -10,4 +10,12 @@ describe("sum two numbers", () => {
 
 		expect(actual).toBe(expected);
 	});
+	it("should return 10 (5+5)", () => {
+		const input = 5;
+		const expected = 10;
+
+		const actual = sum(input, input);
+
+		expect(actual).toBe(expected);
+	});
 });
