@@ -27,7 +27,7 @@ jobs:
               run: npm ci
             - name: Run test
               run: npm run test
-    build:
+    deploy:
         needs: [lint, test]
         runs-on: ubuntu-latest
         steps:
@@ -39,5 +39,5 @@ jobs:
                   node-version: 18
             - name: Install dependencies
               run: npm ci
-            - name: Deploy
+            - name: Deploy code
               run: echo "deploy completed!"
