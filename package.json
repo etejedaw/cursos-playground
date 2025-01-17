@@ -4,10 +4,10 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"test": "jest",
+		"test": "jest --coverage",
 		"test:watch": "jest --watchAll",
-		"lint": "npx eslint .",
-		"lint:fix": "npx eslint . --fix",
+		"lint": "eslint .",
+		"lint:fix": "eslint . --fix",
 		"build": "tsc -p ."
 	},
 	"keywords": [],
