@@ -1,4 +1,4 @@
-import { sum } from "../src/app";
+import { addTax, sum } from "../src/app";
 
 describe("sum two numbers", () => {
 	it("should return 9 (4+5)", () => {
@@ -15,6 +15,17 @@ describe("sum two numbers", () => {
 		const expected = 10;
 
 		const actual = sum(input, input);
+
+		expect(actual).toBe(expected);
+	});
+});
+
+describe("add tax", () => {
+	it("should return 190 (1000*19%)", () => {
+		const input = 1000;
+		const expected = 191;
+
+		const actual = addTax(input);
 
 		expect(actual).toBe(expected);
 	});

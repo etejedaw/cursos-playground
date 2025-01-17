@@ -1,0 +1,51 @@
+name: Deployment
+on:
+    push:
+        branches:
+            - main
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Get code
+              uses: actions/checkout@v3
+            - name: Cache dependencies
+              uses: actions/cache@v3
+              with:
+                  path: ~/.npm
+                  key: deps-node-module-${{hashFiles('**/package-lock.json')}}
+            - name: install dependencies
+              run: npm ci
+            - name: lint code
+              run: npm run lint
+            - name: test code
+              id: run-tests
+              run: npm run test
+            - name: Upload test report
+              if: steps.run-tests.outcome == 'failure'
+              uses: actions/upload-artifact@v4
+              with:
+                  name: test-report
+                  path: test.json
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Get code
+              uses: actions/checkout@v3
+            - name: Cache dependencies
+              uses: actions/cache@v3
+              with:
+                  path: ~/.npm
+                  key: deps-node-module-${{hashFiles('**/package-lock.json')}}
+            - name: Install dependencies
+              run: npm ci
+            - name: Build Proyects
+              run: npm run build
+            - name: Publish JS filename
+              id: publish
+              run: find dist/*.js -type f -execdir echo 'script-file={}' >> $GITHUB_OUTPUT ';'
+            - name: Upload artifacts
+              uses: actions/upload-artifact@v4
+              with:
+                  name: dist-files
+                  path: dist
