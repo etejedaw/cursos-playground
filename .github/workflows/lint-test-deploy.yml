@@ -41,11 +41,3 @@ jobs:
               run: npm ci
             - name: Deploy code
               run: echo "deploy completed!"
-    report:
-        if: failure()
-        runs-on: ubuntu-latest
-        steps:
-            - name: Output information
-              run: |
-                  echo "Something went wrong"
-                  echo "${{github}}"
