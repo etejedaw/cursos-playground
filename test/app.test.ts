@@ -23,7 +23,7 @@ describe("sum two numbers", () => {
 describe("add tax", () => {
 	it("should return 190 (1000*19%)", () => {
 		const input = 1000;
-		const expected = 191;
+		const expected = 190;
 
 		const actual = addTax(input);
 
