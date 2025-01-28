@@ -8,7 +8,8 @@
 		"test:watch": "jest --watchAll",
 		"lint": "eslint .",
 		"lint:fix": "eslint . --fix",
-		"build": "tsc -p ."
+		"build": "tsc -p .",
+		"start": "node dist/app.js"
 	},
 	"keywords": [],
 	"author": "",

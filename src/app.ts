@@ -10,3 +10,5 @@ export function addTax(amount: number) {
 	const tax = Number(process.env.TAX) || 0.19;
 	return amount * tax;
 }
+
+console.log("Hello World!");
