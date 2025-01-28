@@ -13,10 +13,6 @@ jobs:
         services:
             mariadb:
                 image: mariadb:lts-noble
-                restart: always
-                ports:
-                    - 3306:3306
-                container_name: mariadb
                 env:
                     MARIADB_ROOT_PASSWORD: toor
         steps:
