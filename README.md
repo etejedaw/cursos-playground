@@ -2,9 +2,9 @@
 
 Repositorio de ejercicios realizados en cursos y libros.
 
-* Totales: 15
-* Finalizados: 10
-* En Curso: 0
+* Totales: 17
+* Finalizados: 11
+* En Curso: 1
 * Detenidos: 5
 
 ****
@@ -134,3 +134,19 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Link: https://www.udemy.com/course/tdd-fundamentals-in-typescript/
 * Directortio: [17-TFT](17-TFT)
 * Estado: Finalizado
+
+****
+
+* Curso: GitHub Actions - The Complete Guide
+* Instructor: Maximilian Schwarzmüller
+* Link: https://www.udemy.com/course/github-actions-the-complete-guide/
+* Directortio: [18-GHA](18-GHA)
+* Estado: Finalizado
+
+****
+
+* Curso: Patrones de Diseño: Soluciones prácticas y eficientes
+* Instructor: Fernando Herrera
+* Link: https://www.udemy.com/course/patrones-diseno/
+* Directortio: [19-PDSPE](19-PDSPE)
+* Estado: En Curso
