@@ -28,18 +28,20 @@ jobs:
         steps:
             - name: Get Code
               uses: actions/checkout@v3
-            - name: Install NodeJS
-              uses: actions/setup-node@v3
+            - name: Get build artifacts
+              uses: actions/download-artifact@v4
               with:
-                  node-version: 18
-            - name: Install dependencies
-              run: npm ci
+                  name: dist-files
+                  path: ./dist
             - name: Deploy code
-              run: echo "deploy completed!"
-    information:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Get code
-              uses: actions/checkout@v3
-            - name: Run custom action
+              id: desploy
               uses: ./.github/actions/deploy-s3-js
+              env:
+                  AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+                  AWS_SECRET_ACCESS_KEY: ${{secrest.AWS_SECRET_ACCESS_KEY}}
+              with:
+                  bucket: gha-custom-s3
+                  dist-folder: ./dist
+            - name: Output information
+              run: |
+                  echo "Live URL: ${{steps.deploy.outputs.website-url}}"
