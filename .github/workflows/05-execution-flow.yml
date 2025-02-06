@@ -1,0 +1,65 @@
+name: Execution Flow
+on:
+    push:
+        branches:
+            - main
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Get code
+              uses: actions/checkout@v3
+            - name: Cache dependencies
+              id: cache
+              uses: actions/cache@v3
+              with:
+                  path: node_modules
+                  key: deps-node-module-${{hashFiles('**/package-lock.json')}}
+            - name: install dependencies
+              if: steps.cache.outputs.cache-hit != 'true'
+              run: npm ci
+            - name: lint code
+              run: npm run lint
+            - name: test code
+              id: run-tests
+              run: npm run test
+            - name: Upload test report
+              if: failure() && steps.run-tests.outcome == 'failure'
+              uses: actions/upload-artifact@v4
+              with:
+                  name: test-report
+                  path: coverage
+    build:
+        needs: test
+        runs-on: ubuntu-latest
+        steps:
+            - name: Get code
+              uses: actions/checkout@v3
+            - name: Cache dependencies
+              id: cache
+              uses: actions/cache@v3
+              with:
+                  path: node_modules
+                  key: deps-node-module-${{hashFiles('**/package-lock.json')}}
+            - name: install dependencies
+              if: steps.cache.outputs.cache-hit != 'true'
+              run: npm ci
+            - name: Build Proyects
+              run: npm run build
+            - name: Publish JS filename
+              id: publish
+              run: find dist/*.js -type f -execdir echo 'script-file={}' >> $GITHUB_OUTPUT ';'
+            - name: Upload artifacts
+              uses: actions/upload-artifact@v4
+              with:
+                  name: dist-files
+                  path: dist
+    report:
+        needs: [test, build]
+        if: failure()
+        runs-on: ubuntu-latest
+        steps:
+            - name: Output information
+              run: |
+                  echo "Something went wrong"
+                  echo "${{github}}"
