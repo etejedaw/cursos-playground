@@ -2,10 +2,10 @@
 
 Repositorio de ejercicios realizados en cursos y libros.
 
-* Totales: 17
+* Totales: 18
 * Finalizados: 11
 * En Curso: 1
-* Detenidos: 5
+* Detenidos: 6
 
 ****
 
