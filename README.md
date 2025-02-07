@@ -85,7 +85,7 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Instructor: Fernando Herrera
 * Link: https://www.udemy.com/course/angular-fernando-herrera/
 * Directorio: [10-ADCAE](10-ADCAE)
-* Estado: En Curso
+* Estado: Detenido
 
 ****
 
