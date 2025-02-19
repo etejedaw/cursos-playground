@@ -14,89 +14,98 @@
 
 // !Tarea: Tarea: Sistema de Encendido de una Computadora con el Patrón Facade
 
-import { COLORS } from '../helpers/colors.ts';
+import { COLORS } from "../helpers/colors.ts";
 
 // 1. Clases del Subsistema
 
 class CPU {
-  stopOperations(): void {
-    console.log('CPU: Deteniendo operaciones.');
-  }
+	stopOperations(): void {
+		console.log("CPU: Deteniendo operaciones.");
+	}
 
-  jump(position: number): void {
-    console.log(`CPU: Saltando a la posición de memoria ${position}.`);
-  }
+	jump(position: number): void {
+		console.log(`CPU: Saltando a la posición de memoria ${position}.`);
+	}
 
-  execute(): void {
-    console.log('CPU: Ejecutando instrucciones.');
-  }
+	execute(): void {
+		console.log("CPU: Ejecutando instrucciones.");
+	}
 }
 
 class HardDrive {
-  read(position: number, size: number): string {
-    console.log(
-      `HardDrive: Leyendo ${size} bytes desde la posición ${position}.`
-    );
-    return '001010001010100';
-  }
+	read(position: number, size: number): string {
+		console.log(
+			`HardDrive: Leyendo ${size} bytes desde la posición ${position}.`
+		);
+		return "001010001010100";
+	}
 
-  close() {
-    console.log('HardDrive: Deteniendo disco duro.');
-  }
+	close() {
+		console.log("HardDrive: Deteniendo disco duro.");
+	}
 }
 
 class Memory {
-  load(position: number, data: string): void {
-    console.log(`Memory: Cargando datos en la posición ${position} ${data}.`);
-  }
+	load(position: number, data: string): void {
+		console.log(
+			`Memory: Cargando datos en la posición ${position} ${data}.`
+		);
+	}
 
-  free(): void {
-    console.log('Memory: Liberando memoria.');
-  }
+	free(): void {
+		console.log("Memory: Liberando memoria.");
+	}
 }
 
 // 2. Clase Facade - ComputerFacade
 
 class ComputerFacade {
-  // TODO: Agregar los atributos necesarios CPU, Memory y HardDrive
+	// TODO: Agregar los atributos necesarios CPU, Memory y HardDrive
 
-  // TODO: Agregar el constructor para instanciar los atributos CPU, Memory y HardDrive
-  constructor() {}
+	// TODO: Agregar el constructor para instanciar los atributos CPU, Memory y HardDrive
+	private cpu = new CPU();
+	private memory = new Memory();
+	private hardDrive = new HardDrive();
 
-  startComputer(): void {
-    console.log('\n%cIniciando la computadora...', COLORS.cyan);
+	startComputer(): void {
+		console.log("\n%cIniciando la computadora...", COLORS.cyan);
 
-    // TODO: ejecutar las operaciones necesarias para encender la computadora
-    // 1. Cargar el sistema operativo en la memoria - memory.load(0, hardDrive.read(0, 1024))
-    // 2. Saltar a la posición de memoria 0 - cpu.jump(0)
-    // 3. Ejecutar las instrucciones del CPU - cpu.execute()
+		// TODO: ejecutar las operaciones necesarias para encender la computadora
+		// 1. Cargar el sistema operativo en la memoria - memory.load(0, hardDrive.read(0, 1024))
+		// 2. Saltar a la posición de memoria 0 - cpu.jump(0)
+		// 3. Ejecutar las instrucciones del CPU - cpu.execute()
+		this.memory.load(0, this.hardDrive.read(0, 1024));
+		this.cpu.jump(0);
+		this.cpu.execute();
+		console.log("Computadora lista para usar.\n");
+	}
 
-    console.log('Computadora lista para usar.\n');
-  }
+	shutDownComputer(): void {
+		console.log("\n%cApagando la computadora...", COLORS.red);
+		console.log("Cerrando procesos y guardando datos...");
 
-  shutDownComputer(): void {
-    console.log('\n%cApagando la computadora...', COLORS.red);
-    console.log('Cerrando procesos y guardando datos...');
+		// TODO: ejecutar las operaciones necesarias para apagar la computadora
+		// 1. Detener las operaciones del CPU - cpu.stopOperations()
+		// 2. Liberar la memoria - memory.free()
+		// 3. Cerrar el disco duro - hardDrive.close()
+		this.cpu.stopOperations();
+		this.memory.free();
+		this.hardDrive.close();
 
-    // TODO: ejecutar las operaciones necesarias para apagar la computadora
-    // 1. Detener las operaciones del CPU - cpu.stopOperations()
-    // 2. Liberar la memoria - memory.free()
-    // 3. Cerrar el disco duro - hardDrive.close()
-
-    console.log('Computadora apagada.\n');
-  }
+		console.log("Computadora apagada.\n");
+	}
 }
 
 // 3. Código Cliente para Usar la Facade
 // TODO: Aquí no hay nada que hacer, debe de encender la computadora y apagarla sin problemas
 function main() {
-  const computer = new ComputerFacade();
+	const computer = new ComputerFacade();
 
-  // Encender la computadora usando la fachada
-  computer.startComputer();
+	// Encender la computadora usando la fachada
+	computer.startComputer();
 
-  // Apagar la computadora usando la fachada
-  computer.shutDownComputer();
+	// Apagar la computadora usando la fachada
+	computer.shutDownComputer();
 }
 
 main();
