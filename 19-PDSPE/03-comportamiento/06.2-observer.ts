@@ -14,92 +14,92 @@
  * https://refactoring.guru/es/design-patterns/observer
  */
 
-import { COLORS } from '../helpers/colors.ts';
+import { COLORS } from "../helpers/colors.ts";
 
 // Interfaz Observer
 interface Observer {
-  update(weatherData: string): void;
+	update(weatherData: string): void;
 }
 
 // Clase Subject - WeatherStation
 // TODO: Terminal la implementación
 class WeatherStation {
-  // observers = [];
-  // weatherData = 'Soleado';
+	private observers: Observer[] = [];
+	private weatherData = "Soleado";
 
-  // Agregar un Observer
-  subscribe(observer: Observer): void {
-    // TODO: añadir observer
+	// Agregar un Observer
+	subscribe(observer: Observer): void {
+		this.observers.push(observer);
 
-    console.log(
-      '%cNueva aplicación suscrita al sistema meteorológico.',
-      COLORS.green
-    );
-  }
+		console.log(
+			"%cNueva aplicación suscrita al sistema meteorológico.",
+			COLORS.green
+		);
+	}
 
-  // Eliminar un Observer
-  unsubscribe(observer: Observer): void {
-    // TODO: eliminar observer
+	// Eliminar un Observer
+	unsubscribe(observer: Observer): void {
+		this.observers = this.observers.filter(obs => obs !== observer);
 
-    console.log(`%cUna aplicación se ha dado de baja`, COLORS.red);
-  }
+		console.log(`%cUna aplicación se ha dado de baja`, COLORS.red);
+	}
 
-  // Actualizar el clima y notificar a todos los Observers
-  setWeather(weatherData: string): void {
-    console.log(`\nClima actualizado: %c${weatherData}`, COLORS.blue);
+	// Actualizar el clima y notificar a todos los Observers
+	setWeather(weatherData: string): void {
+		console.log(`\nClima actualizado: %c${weatherData}`, COLORS.blue);
 
-    // TODO: actualizar clima y notificar a todos los Observers con el método notifyObservers
-  }
+		this.weatherData = weatherData;
+		this.notifyObservers();
+	}
 
-  // Notificar a todos los Observers
-  private notifyObservers(): void {
-    // TODO: implementar método
-    throw new Error('Method not implemented.');
-  }
+	// Notificar a todos los Observers
+	private notifyObservers(): void {
+		this.observers.forEach(obs => obs.update(this.weatherData));
+	}
 }
 
 // Clase Observer - WeatherApp
 class WeatherApp implements Observer {
-  private name: string;
+	private name: string;
 
-  constructor(name: string) {
-    this.name = name;
-  }
+	constructor(name: string) {
+		this.name = name;
+	}
 
-  // Recibir actualización del clima
-  update(weatherData: string): void {
-    console.log(
-      `%c${this.name} %cha recibido notificación del clima: %c${weatherData}`,
-      COLORS.red,
-      COLORS.white,
-      COLORS.yellow
-    );
-  }
+	// Recibir actualización del clima
+	update(weatherData: string): void {
+		console.log(
+			`%c${this.name} %cha recibido notificación del clima: %c${weatherData}`,
+			COLORS.red,
+			COLORS.white,
+			COLORS.yellow
+		);
+	}
 }
 
 // Código Cliente para Probar
 function main(): void {
-  const weatherStation = new WeatherStation();
+	const weatherStation = new WeatherStation();
 
-  // Crear aplicaciones
-  const flutterWeatherApp = new WeatherApp('Flutter WeatherApp');
-  const reactNativeWeatherApp = new WeatherApp('React Native WeatherApp');
-  const weatherTrackerApp = new WeatherApp('Weather Tracker App');
+	// Crear aplicaciones
+	const flutterWeatherApp = new WeatherApp("Flutter WeatherApp");
+	const reactNativeWeatherApp = new WeatherApp("React Native WeatherApp");
+	const weatherTrackerApp = new WeatherApp("Weather Tracker App");
 
-  // Suscribir aplicaciones a la estación meteorológica
-  weatherStation.subscribe(flutterWeatherApp);
-  weatherStation.subscribe(reactNativeWeatherApp);
+	// Suscribir aplicaciones a la estación meteorológica
+	weatherStation.subscribe(flutterWeatherApp);
+	weatherStation.subscribe(reactNativeWeatherApp);
 
-  // Actualizar el clima
-  weatherStation.setWeather('Lluvioso');
+	// Actualizar el clima
+	weatherStation.setWeather("Lluvioso");
 
-  // Agregar una nueva aplicación
-  weatherStation.subscribe(weatherTrackerApp);
-  weatherStation.setWeather('Nublado');
+	// Agregar una nueva aplicación
+	weatherStation.subscribe(weatherTrackerApp);
+	weatherStation.setWeather("Nublado");
 
-  // Una aplicación se da de baja
-  weatherStation.unsubscribe(reactNativeWeatherApp);
-  weatherStation.setWeather('Tormenta eléctrica');
+	// Una aplicación se da de baja
+	weatherStation.unsubscribe(reactNativeWeatherApp);
+	weatherStation.setWeather("Tormenta eléctrica");
 }
 
 main();
