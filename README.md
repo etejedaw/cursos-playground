@@ -3,8 +3,8 @@
 Repositorio de ejercicios realizados en cursos y libros.
 
 * Totales: 18
-* Finalizados: 11
-* En Curso: 1
+* Finalizados: 12
+* En Curso: 0
 * Detenidos: 6
 
 ****
@@ -149,4 +149,4 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Instructor: Fernando Herrera
 * Link: https://www.udemy.com/course/patrones-diseno/
 * Directortio: [19-PDSPE](19-PDSPE)
-* Estado: En Curso
+* Estado: Finalizado
