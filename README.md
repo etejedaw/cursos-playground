@@ -2,9 +2,9 @@
 
 Repositorio de ejercicios realizados en cursos y libros.
 
-* Totales: 18
+* Totales: 19
 * Finalizados: 12
-* En Curso: 0
+* En Curso: 1
 * Detenidos: 6
 
 ****
@@ -150,3 +150,11 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Link: https://www.udemy.com/course/patrones-diseno/
 * Directortio: [19-PDSPE](19-PDSPE)
 * Estado: Finalizado
+
+****
+
+* Curso: Serverless en Español con AWS y Serverless Framework
+* Instructor: Marcia Villalba
+* Link: https://www.udemy.com/course/serverless-en-espanol
+* Directortio: [20-SEAWS](20-SEAWS)
+* Estado: En Curso

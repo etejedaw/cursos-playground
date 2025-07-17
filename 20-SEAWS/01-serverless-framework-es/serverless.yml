@@ -1,0 +1,33 @@
+service: pizzaApp
+
+provider:
+    name: aws
+    runtime: nodejs22.x
+
+functions:
+    new-order:
+        handler: handler.newOrder
+        events:
+            - httpApi:
+                  path: /order
+                  method: post
+    get-order:
+        handler: handler.getOrder
+        events:
+            - httpApi:
+                  path: /order/{orderId}
+                  method: get
+    prep-order:
+        handler: handler.prepOrder
+        events:
+            - sqs:
+                  arn:
+                      Fn::GetAtt: [PendingOrderQueue, Arn]
+                  batchSize: 1
+
+resources:
+    Resources:
+        PendingOrderQueue:
+            Type: AWS::SQS::Queue
+            Properties:
+                QueueName: pendingOrderQueue

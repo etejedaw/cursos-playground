@@ -1,0 +1,14 @@
+{
+	"name": "01-serverless-framework-es",
+	"version": "1.0.0",
+	"main": "handler.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"deploy": "serverless deploy --aws-profile udemy"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"description": "",
+	"type": "module"
+}
