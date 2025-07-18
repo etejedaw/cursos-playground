@@ -157,4 +157,4 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Instructor: Marcia Villalba
 * Link: https://www.udemy.com/course/serverless-en-espanol
 * Directortio: [20-SEAWS](20-SEAWS)
-* Estado: En Curso
+* Estado: Finalizado
