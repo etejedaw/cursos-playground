@@ -2,9 +2,9 @@
 
 Repositorio de ejercicios realizados en cursos y libros.
 
-* Totales: 19
+* Totales: 20
 * Finalizados: 12
-* En Curso: 1
+* En Curso: 2
 * Detenidos: 6
 
 ****
@@ -158,3 +158,11 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Link: https://www.udemy.com/course/serverless-en-espanol
 * Directortio: [20-SEAWS](20-SEAWS)
 * Estado: Finalizado
+
+***
+
+* Curso: AI Engineer Agentic Track: The Complete Agent & MCP Course
+* Instructor: Ed Donner
+* Link: https://www.udemy.com/course/the-complete-agentic-ai-engineering-course
+* Directorio: [21-AIEAT] (21-AIEAT)
+* Estado: En Curso

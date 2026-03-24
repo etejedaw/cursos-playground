@@ -1,0 +1,16 @@
+{
+	"name": "01-fundations",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"start:lab1": "node --env-file=.env --watch lab1.js"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"type": "module",
+	"dependencies": {
+		"openai": "^6.32.0"
+	}
+}
