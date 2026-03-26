@@ -4,13 +4,15 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"start:lab1": "node --env-file=.env --watch lab1.js"
+		"start:lab1": "node --env-file=.env --watch lab1.js",
+		"start:lab2": "node --env-file=.env --watch lab2.js"
 	},
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
 	"type": "module",
 	"dependencies": {
-		"openai": "^6.32.0"
+		"openai": "^6.32.0",
+		"pdf-parse": "^2.4.5"
 	}
 }
