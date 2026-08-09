@@ -52,16 +52,8 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Libro: Sumérgete en los PATRONES de DISEÑO
 * Escritor: Alexander Shvets
 * Link: https://refactoring.guru/es/design-patterns/book
-* Directorio: [Libros/01-DIDP](07-OTROS/01-DIDP)
+* Directorio: [07-DIDP](07-DIDP)
 * Estado: Detenido
-
-****
-
-* Libro: You Don't Know JS Yet Collection
-* Autor: Kyle Simpson
-* Link: https://www.amazon.com/-/es/Kyle-Simpson-ebook/dp/B084BNMN7T
-* Directorio: [Libros/02-YDKJSY](07-OTROS/02-YDKJSY)
-* Estado: Finalizado
 
 ****
 
@@ -86,6 +78,14 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Link: https://www.udemy.com/course/angular-fernando-herrera/
 * Directorio: [10-ADCAE](10-ADCAE)
 * Estado: Detenido
+
+****
+
+* Libro: You Don't Know JS Yet Collection
+* Autor: Kyle Simpson
+* Link: https://www.amazon.com/-/es/Kyle-Simpson-ebook/dp/B084BNMN7T
+* Directorio: [11-YDKJSY](11-YDKJSY)
+* Estado: Finalizado
 
 ****
 
