@@ -52,7 +52,7 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Libro: Sumérgete en los PATRONES de DISEÑO
 * Escritor: Alexander Shvets
 * Link: https://refactoring.guru/es/design-patterns/book
-* Directorio [Libros/01-DIDP](07-OTROS/01-DIDP)
+* Directorio: [Libros/01-DIDP](07-OTROS/01-DIDP)
 * Estado: Detenido
 
 ****
@@ -132,7 +132,7 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Curso: TDD Fundamentals in TypeScript
 * Instructor: DevFluence
 * Link: https://www.udemy.com/course/tdd-fundamentals-in-typescript/
-* Directortio: [17-TFT](17-TFT)
+* Directorio: [17-TFT](17-TFT)
 * Estado: Finalizado
 
 ****
@@ -140,7 +140,7 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Curso: GitHub Actions - The Complete Guide
 * Instructor: Maximilian Schwarzmüller
 * Link: https://www.udemy.com/course/github-actions-the-complete-guide/
-* Directortio: [18-GHA](18-GHA)
+* Directorio: [18-GHA](18-GHA)
 * Estado: Finalizado
 
 ****
@@ -148,7 +148,7 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Curso: Patrones de Diseño: Soluciones prácticas y eficientes
 * Instructor: Fernando Herrera
 * Link: https://www.udemy.com/course/patrones-diseno/
-* Directortio: [19-PDSPE](19-PDSPE)
+* Directorio: [19-PDSPE](19-PDSPE)
 * Estado: Finalizado
 
 ****
@@ -156,7 +156,7 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Curso: Serverless en Español con AWS y Serverless Framework
 * Instructor: Marcia Villalba
 * Link: https://www.udemy.com/course/serverless-en-espanol
-* Directortio: [20-SEAWS](20-SEAWS)
+* Directorio: [20-SEAWS](20-SEAWS)
 * Estado: Finalizado
 
 ***
@@ -164,7 +164,7 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Curso: AI Engineer Agentic Track: The Complete Agent & MCP Course
 * Instructor: Ed Donner
 * Link: https://www.udemy.com/course/the-complete-agentic-ai-engineering-course
-* Directorio: [21-AIEAT] (21-AIEAT)
+* Directorio: [21-AIEAT](21-AIEAT)
 * Estado: En Curso
 
 ****
