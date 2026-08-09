@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contador</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      background: #0f172a;
+      color: #e2e8f0;
+    }
+
+    h1 {
+      color: #f1f5f9;
+    }
+
+    #valor {
+      font-size: 4rem;
+      font-weight: bold;
+      color: #60a5fa;
+      margin: 1rem 0;
+    }
+
+    .botones {
+      display: flex;
+      gap: 1rem;
+    }
+
+    button {
+      font-size: 1.5rem;
+      width: 3.5rem;
+      height: 3.5rem;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      background: #2563eb;
+      color: white;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    #reset {
+      background: #6b7280;
+    }
+
+    #reset:hover {
+      background: #4b5563;
+    }
+  </style>
+</head>
+<body>
+  <h1>Contador</h1>
+  <div id="valor">0</div>
+  <div class="botones">
+    <button id="restar">−</button>
+    <button id="reset">↺</button>
+    <button id="sumar">+</button>
+  </div>
+
+  <script>
+    let contador = 0;
+    const valor = document.getElementById('valor');
+
+    function actualizar() {
+      valor.textContent = contador;
+    }
+
+    document.getElementById('sumar').addEventListener('click', () => {
+      contador++;
+      actualizar();
+    });
+
+    document.getElementById('restar').addEventListener('click', () => {
+      contador--;
+      actualizar();
+    });
+
+    document.getElementById('reset').addEventListener('click', () => {
+      contador = 0;
+      actualizar();
+    });
+  </script>
+</body>
+</html>
