@@ -2,8 +2,8 @@
 
 Repositorio de ejercicios realizados en cursos y libros.
 
-* Totales: 20
-* Finalizados: 12
+* Totales: 21
+* Finalizados: 13
 * En Curso: 2
 * Detenidos: 6
 
@@ -165,4 +165,12 @@ Repositorio de ejercicios realizados en cursos y libros.
 * Instructor: Ed Donner
 * Link: https://www.udemy.com/course/the-complete-agentic-ai-engineering-course
 * Directorio: [21-AIEAT] (21-AIEAT)
+* Estado: En Curso
+
+****
+
+* Curso: Claude Code: Guía completa para desarrolladores de software
+* Instructor: Fernando Herrera
+* Link: https://www.udemy.com/course/claude-code-guia-completa/
+* Directorio: [22-CCGC](22-CCGC)
 * Estado: En Curso
