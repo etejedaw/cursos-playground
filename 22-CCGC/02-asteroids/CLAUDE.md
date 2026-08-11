@@ -30,7 +30,17 @@ Tres archivos: `index.html` (canvas 800×600 + CSS inline + `<script src="game.j
 
 **Ciclo de vida**: nada se elimina durante la iteración. Las entidades se marcan `dead = true` y `update()` reconstruye los arrays con `.filter(e => !e.dead)`. Los asteroides hijos de `split()` se acumulan en `newAsteroids` y se concatenan después del bucle de colisiones, para no mutar el array que se está recorriendo.
 
-**Estado global**: variables sueltas `ship, bullets, asteroids, particles, score, lives, level, state, deadTimer`. `state` es `'playing' | 'dead' | 'gameover'` y `update()` hace early-return con lógica distinta por cada uno (en `'dead'` siguen moviéndose asteroides y partículas; en `'gameover'` solo partículas y se espera Espacio para `initGame()`).
+**Power-ups**: la tabla `POWERUPS` (clave → `{label, sides, color, duration, weight, minSize}`) es la
+única fuente de verdad; añadir un tipo es añadir una entrada y consumir su efecto donde toque. `sides`
+dibuja el polígono wireframe (0 = estrella), `duration: 0` marca carga de un solo uso en vez de efecto
+temporizado, `weight` es la rareza en el sorteo y `minSize` restringe de qué tamaño de asteroide puede
+caer (el triple solo de los grandes). Los efectos activos viven en el objeto global `timers`, que
+`update()` decrementa por `dt`; cada consumidor lee `timers.x > 0` directamente (`Ship.update` para
+hiper, `Ship.tryShoot` para triple, el `astDt` del bucle para lento, la colisión nave-asteroide para
+escudo). La nova es aparte: `novaCharges` + `detonateNova()`, disparada por `pressed('KeyB')`.
+
+**Estado global**: variables sueltas `ship, bullets, asteroids, particles, powerups, timers,
+novaCharges, novaFlash, score, lives, level, state, deadTimer`. `state` es `'playing' | 'dead' | 'gameover'` y `update()` hace early-return con lógica distinta por cada uno (en `'dead'` siguen moviéndose asteroides y partículas; en `'gameover'` solo partículas y se espera Espacio para `initGame()`).
 
 **Input**: `keys` (mantenido) para acciones continuas — rotar, propulsar; `pressed(code)` (edge-triggered, se consume al leerlo) para acciones de un solo disparo — disparar, reiniciar. Elegir mal entre los dos es la causa típica de "se dispara en ráfaga" o "no responde".
 
@@ -42,5 +52,5 @@ Tres archivos: `index.html` (canvas 800×600 + CSS inline + `<script src="game.j
 
 ## Notas
 
-- El README describe power-ups y una "estrella fugaz" que **no** existen en `game.js`; son features pendientes del ejercicio, no código eliminado.
+- El README describe una "estrella fugaz" que **no** existe en `game.js`; es una feature pendiente del ejercicio, no código eliminado. Los power-ups ya están implementados.
 - Comentarios y textos de UI en español; identificadores en inglés.
