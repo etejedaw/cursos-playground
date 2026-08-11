@@ -62,6 +62,37 @@ const RADII  = [0, 16, 30, 50];   // por tamaño 1, 2, 3
 const SPEEDS = [0, 85, 55, 32];   // velocidad base por tamaño
 const POINTS = [0, 100, 50, 20];  // puntos por tamaño
 
+// Silueta clásica del arcade, en radio unitario (la magnitud máxima es 1).
+// Tiene una muesca cóncava en el flanco derecho.
+const SHAPE_CLASSIC = [
+  [-0.114, -0.933],
+  [ 0.437, -0.786],
+  [ 0.316, -0.235],   // entrada de la muesca
+  [ 0.853, -0.061],
+  [ 0.691,  0.544],
+  [ 0.235,  0.537],
+  [ 0.020,  0.900],
+  [-0.638,  0.584],
+  [-0.960,  0.027],
+  [-0.839, -0.544],
+];
+
+// Variantes de silueta para asteroides grandes; `null` = polígono irregular
+// generado al vuelo (la variante original). Añadir siluetas aquí basta.
+const BIG_SHAPES = [null, SHAPE_CLASSIC];
+
+// Polígono irregular de 8..12 lados inscrito en `radius`.
+function randomVerts(radius) {
+  const n = randInt(8, 13);
+  const verts = [];
+  for (let i = 0; i < n; i++) {
+    const a = (i / n) * Math.PI * 2;
+    const r = radius * rand(0.6, 1.0);
+    verts.push([Math.cos(a) * r, Math.sin(a) * r]);
+  }
+  return verts;
+}
+
 class Asteroid {
   constructor(x, y, size = 3) {
     this.x    = x;
@@ -77,14 +108,11 @@ class Asteroid {
     this.rotSpeed = rand(-1.2, 1.2);
     this.rot = rand(0, Math.PI * 2);
 
-    // Polígono irregular
-    const n = randInt(8, 13);
-    this.verts = [];
-    for (let i = 0; i < n; i++) {
-      const a = (i / n) * Math.PI * 2;
-      const r = this.radius * rand(0.6, 1.0);
-      this.verts.push([Math.cos(a) * r, Math.sin(a) * r]);
-    }
+    // Silueta: los grandes sortean entre las variantes; el resto, procedural
+    const shape = size === 3 ? BIG_SHAPES[randInt(0, BIG_SHAPES.length - 1)] : null;
+    this.verts = shape
+      ? shape.map(([x, y]) => [x * this.radius, y * this.radius])
+      : randomVerts(this.radius);
   }
 
   update(dt) {
