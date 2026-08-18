@@ -2,50 +2,55 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Comandos
+## Proyecto
 
-No hay build, bundler, linter, ni tests. El proyecto es HTML + JS plano sin dependencias.
+Clon de **Asteroids** en canvas HTML5 puro. Es un ejercicio del curso "Claude Code: Guía completa para desarrolladores de software" (Fernando Herrera), dentro del monorepo de cursos `cursos-playground`. Cada carpeta numerada de la raíz es un curso independiente y sin relación entre sí.
+
+Sin dependencias, sin bundler, sin package.json, sin tests ni linter. No introduzcas ninguno de ellos salvo petición explícita.
+
+## Correr
+
+Abrir `index.html` en el navegador, o servir la carpeta:
 
 ```bash
-npx serve .     # servidor local en http://localhost:3000
+npx serve .   # http://localhost:3000
 ```
 
-También funciona abriendo `index.html` directamente en el navegador (`file://`), ya que `game.js` se carga como script clásico, no como módulo ES.
+No hay paso de build: los cambios en `game.js` se ven recargando la página.
 
 ## Arquitectura
 
-Todo el juego vive en `game.js` (~420 líneas), un único script clásico sin `import`/`export`. `index.html` solo aporta el `<canvas id="canvas">` de 800×600 y estilos mínimos. El archivo está dividido en secciones marcadas con separadores `// ── Nombre ──`; mantén ese formato al añadir código.
+Tres archivos: `index.html` (canvas 800×600 + CSS inline + `<script src="game.js">`), `game.js` (todo el juego), `favicon.svg`.
 
-### Bucle y tiempo
+`game.js` es un único script en scope global con `'use strict'` — **no** es un módulo ES, no hay `import`/`export`. Está organizado por secciones separadas con comentarios `// ── Nombre ───`; mantén ese estilo al agregar código.
 
-`loop(ts)` en `requestAnimationFrame` calcula `dt` en **segundos** y lo capea a `0.05` para evitar saltos tras un cambio de pestaña. Toda la física está expresada en unidades por segundo (px/s, px/s², rad/s) y multiplicada por `dt`. Cualquier constante nueva de movimiento debe seguir esa convención, nunca px por frame.
+**Bucle**: `loop(ts)` calcula `dt` en segundos con el timestamp de `requestAnimationFrame`, lo limita a 0.05 (evita saltos tras perder foco) y llama `update(dt)` → `draw()`. Toda la física es dependiente de `dt` (px/s, rad/s), nunca por frame: cualquier constante nueva de movimiento debe multiplicarse por `dt`.
 
-### Entidades
+**Entidades** (`Bullet`, `Asteroid`, `Ship`, `Particle`): clases con el mismo contrato — `update(dt)`, `draw()` y una bandera `dead`. `draw()` dibuja sobre el `ctx` global; las que rotan usan `ctx.save()/translate/rotate/restore` y dibujan en coordenadas locales centradas en el origen. Una entidad nueva debe seguir ese contrato para poder integrarse al bucle.
 
-`Bullet`, `Asteroid`, `Ship` y `Particle` son clases independientes con el mismo contrato informal: `update(dt)` y `draw()`, más una bandera `dead` que el bucle usa para filtrarlas. No hay clase base ni sistema de entidades; las nuevas entidades solo necesitan respetar ese contrato y añadirse a su propio array global.
+**Ciclo de vida**: nada se elimina durante la iteración. Las entidades se marcan `dead = true` y `update()` reconstruye los arrays con `.filter(e => !e.dead)`. Los asteroides hijos de `split()` se acumulan en `newAsteroids` y se concatenan después del bucle de colisiones, para no mutar el array que se está recorriendo.
 
-Todo el dibujo usa el `ctx` global directamente y el estilo vectorial del arcade original: trazos blancos de 1.5px sobre fondo negro, `ctx.save()`/`translate`/`rotate`/`restore` por entidad.
+**Power-ups**: la tabla `POWERUPS` (clave → `{label, sides, color, duration, weight, minSize}`) es la
+única fuente de verdad; añadir un tipo es añadir una entrada y consumir su efecto donde toque. `sides`
+dibuja el polígono wireframe (0 = estrella), `duration: 0` marca carga de un solo uso en vez de efecto
+temporizado, `weight` es la rareza en el sorteo y `minSize` restringe de qué tamaño de asteroide puede
+caer (el triple solo de los grandes). Los efectos activos viven en el objeto global `timers`, que
+`update()` decrementa por `dt`; cada consumidor lee `timers.x > 0` directamente (`Ship.update` para
+hiper, `Ship.tryShoot` para triple, el `astDt` del bucle para lento, la colisión nave-asteroide para
+escudo). La nova es aparte: `novaCharges` + `detonateNova()`, disparada por `pressed('KeyB')`.
 
-Las tres constantes por tamaño de asteroide —`RADII`, `SPEEDS`, `POINTS`— son arrays indexados por `size` (1=pequeño, 2=mediano, 3=grande) con el índice 0 sin usar como relleno. Si añades un tamaño, hay que extender las tres a la vez.
+**Estado global**: variables sueltas `ship, bullets, asteroids, particles, powerups, timers,
+novaCharges, novaFlash, score, lives, level, state, deadTimer`. `state` es `'playing' | 'dead' | 'gameover'` y `update()` hace early-return con lógica distinta por cada uno (en `'dead'` siguen moviéndose asteroides y partículas; en `'gameover'` solo partículas y se espera Espacio para `initGame()`).
 
-### Envolvimiento toroidal
+**Input**: `keys` (mantenido) para acciones continuas — rotar, propulsar; `pressed(code)` (edge-triggered, se consume al leerlo) para acciones de un solo disparo — disparar, reiniciar. Elegir mal entre los dos es la causa típica de "se dispara en ráfaga" o "no responde".
 
-`wrap(v, max)` mantiene todo dentro de la pantalla. Se aplica a nave, balas y asteroides, pero **no** a las partículas (mueren antes de importar). El colisionador usa distancia euclídea simple sin considerar el wrap, así que objetos separados por un borde no colisionan; es una limitación conocida y aceptada.
+**Espacio toroidal**: posiciones envueltas con `wrap(v, max)` usando el módulo positivo. El wrap es solo de posición: la detección de colisiones (`dist`) es euclidiana simple, así que dos objetos separados por el borde no colisionan aunque visualmente estén cerca.
 
-### Estado y flujo
+**Tablas por tamaño**: `RADII`, `SPEEDS`, `POINTS` son arrays indexados por `size` (1=pequeño, 2=mediano, 3=grande) con un `0` de relleno en el índice 0. Al añadir un tamaño hay que extender las tres tablas a la vez.
 
-Estado global mutable en variables sueltas: `ship`, `bullets`, `asteroids`, `particles`, `score`, `lives`, `level`, `state`, `deadTimer`. La máquina de estados `state` tiene tres valores y `update(dt)` hace early-return por cada uno:
-
-- `'playing'` — lógica completa
-- `'dead'` — pausa de 2s (`deadTimer`); asteroides y partículas siguen animándose, la nave no
-- `'gameover'` — solo partículas; `Espacio` llama a `initGame()`
-
-`nextLevel()` se dispara cuando `asteroids.length === 0` y hace spawn de `3 + level` asteroides. `initGame()` es el único punto que resetea el score y las vidas.
-
-### Entrada
-
-`keys[code]` es estado continuo (rotación, propulsión). `pressed(code)` es detección de flanco y **consume** el valor al leerlo, por lo que solo debe llamarse una vez por frame y por tecla; se usa para disparar y reiniciar.
+**Progresión**: al vaciarse `asteroids`, `nextLevel()` sube `level` y genera `3 + level` asteroides grandes. `spawnAsteroids()` rechaza posiciones a menos de 130px del centro para no matar a la nave al reaparecer.
 
 ## Notas
 
-`README.md` describe power-ups y una "estrella fugaz" que **no existen en el código** — es texto heredado del proyecto original enlazado en la demo. No lo tomes como especificación del estado actual.
+- El README describe una "estrella fugaz" que **no** existe en `game.js`; es una feature pendiente del ejercicio, no código eliminado. Los power-ups ya están implementados.
+- Comentarios y textos de UI en español; identificadores en inglés.
