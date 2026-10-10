@@ -23,11 +23,13 @@ No hay paso de build: los cambios se ven recargando la página.
 
 Tres archivos: `index.html` (canvas del tablero 300×600, canvas `#next-canvas` 120×120, HUD y overlay), `style.css` (tema oscuro) y `game.js` (todo el juego).
 
-`game.js` es un único script en scope global con `'use strict'` — **no** es un módulo ES. Todo el estado son variables sueltas declaradas en una sola línea `let board, current, next, score, lines, level, paused, gameOver, lastTime, dropAccum, dropInterval, animId;` y reinicializadas en `init()`. Una variable de estado nueva debe añadirse a ambos sitios.
+`game.js` es un único script en scope global con `'use strict'` — **no** es un módulo ES. Todo el estado son variables sueltas declaradas en una sola línea `let board, current, next, score, lines, level, paused, gameOver, lastTime, dropAccum, dropInterval, animId, pendingPowerUp, freezeRemaining, notice;` y reinicializadas en `init()`. Una variable de estado nueva debe añadirse a ambos sitios.
 
 **Modelo**: `board` es una matriz `ROWS × COLS` donde `0` es vacío y `1..7` es el tipo de pieza. Las matrices de `PIECES` usan el propio índice de tipo como valor de celda (no `1`), así que `merge()` copia el valor tal cual y ese número es también el índice en `COLORS`. `PIECES`, `COLORS` y el `Math.random() * 7` de `randomPiece()` están acoplados por índice con un `null` de relleno en la posición 0: añadir una pieza exige tocar los tres.
 
 **Pieza**: `{ type, shape, x, y }`. Rotar es `rotateCW` (transpuesta + reverso) y `tryRotate` prueba desplazamientos `[0, -1, 1, -2, 2]`; no es SRS ni hay rotación antihoraria. `collide(shape, ox, oy)` es la única comprobación de colisión y permite `ny < 0` (filas sobre el tablero no colisionan).
+
+**Power-ups**: `clearLines()` activa `pendingPowerUp` cada `POWER_UP_EVERY_LINES` líneas y la siguiente llamada a `randomPiece()` devuelve `powerUpPiece()`: pieza 1×1 con `type: 0`, `powerUp: kind` y `shape: [[kind]]`, donde la celda es el nombre del power-up (string) en lugar de un índice de `COLORS`. Nunca se fusiona al tablero: `lockPiece()` llama a `activatePowerUp()` (tabla `POWER_UP_EFFECTS`) en vez de `merge()`. `drawBlock` delega en `drawPowerUpBlock` cuando la celda es un string. `freezeRemaining` y `notice` son temporizadores en ms que `tickTimers(dt)` descuenta en `loop`; mientras `freezeRemaining > 0` no se acumula `dropAccum`.
 
 **Bucle**: `loop(ts)` acumula `dt` en milisegundos en `dropAccum` y baja una fila al superar `dropInterval`; no hay `update(dt)` separado ni física por `dt`. Cada frame redibuja todo con `draw()`; la vista previa (`drawNext`) solo se repinta en `spawn()`. `updateHUD()` escribe al DOM y se llama tras cada tecla y en `clearLines`/`softDrop`.
 

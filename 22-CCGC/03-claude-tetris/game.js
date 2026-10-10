@@ -56,6 +56,20 @@ const PIECES = [
 
 const LINE_SCORES = [0, 100, 300, 500, 800];
 
+const POWER_UP_EVERY_LINES = 5;
+const FREEZE_DURATION = 5000;
+const NOTICE_DURATION = 1500;
+const DESTROYED_BLOCK_SCORE = 10;
+
+const POWER_UPS = {
+	bomb: { color: "#ff7043", icon: "💣", label: "BOMBA" },
+	lightning: { color: "#fbc02d", icon: "⚡", label: "RAYO" },
+	tint: { color: "#ec407a", icon: "🎨", label: "TINTE" },
+	gravity: { color: "#8d6e63", icon: "⬇️", label: "GRAVEDAD" },
+	freeze: { color: "#29b6f6", icon: "❄️", label: "CONGELAR" }
+};
+const POWER_UP_KINDS = Object.keys(POWER_UPS);
+
 const canvas = document.getElementById("board");
 const ctx = canvas.getContext("2d");
 const nextCanvas = document.getElementById("next-canvas");
@@ -63,6 +77,7 @@ const nextCtx = nextCanvas.getContext("2d");
 const scoreEl = document.getElementById("score");
 const linesEl = document.getElementById("lines");
 const levelEl = document.getElementById("level");
+const powerUpEl = document.getElementById("power-up-progress");
 const overlay = document.getElementById("overlay");
 const overlayTitle = document.getElementById("overlay-title");
 const overlayScore = document.getElementById("overlay-score");
@@ -83,13 +98,31 @@ let board,
 	lastTime,
 	dropAccum,
 	dropInterval,
-	animId;
+	animId,
+	pendingPowerUp,
+	freezeRemaining,
+	notice;
 
 function createBoard() {
 	return Array.from({ length: ROWS }, () => new Array(COLS).fill(0));
 }
 
+function powerUpPiece() {
+	const kind = POWER_UP_KINDS[Math.floor(Math.random() * POWER_UP_KINDS.length)];
+	return {
+		type: 0,
+		powerUp: kind,
+		shape: [[kind]],
+		x: Math.floor(COLS / 2),
+		y: 0
+	};
+}
+
 function randomPiece() {
+	if (pendingPowerUp) {
+		pendingPowerUp = false;
+		return powerUpPiece();
+	}
 	const type = Math.floor(Math.random() * 7) + 1;
 	const shape = PIECES[type].map(row => [...row]);
 	return {
@@ -152,7 +185,11 @@ function clearLines() {
 		}
 	}
 	if (cleared) {
+		const powerUpsBefore = Math.floor(lines / POWER_UP_EVERY_LINES);
 		lines += cleared;
+		if (Math.floor(lines / POWER_UP_EVERY_LINES) > powerUpsBefore) {
+			pendingPowerUp = true;
+		}
 		score += (LINE_SCORES[cleared] || 0) * level;
 		level = Math.floor(lines / 10) + 1;
 		dropInterval = Math.max(100, 1000 - (level - 1) * 90);
@@ -183,8 +220,67 @@ function softDrop() {
 	}
 }
 
+function impactRow(y) {
+	return Math.min(y + 1, ROWS - 1);
+}
+
+function destroyBlocks(shouldDestroy) {
+	let destroyed = 0;
+	for (let r = 0; r < ROWS; r++)
+		for (let c = 0; c < COLS; c++)
+			if (board[r][c] && shouldDestroy(r, c)) {
+				board[r][c] = 0;
+				destroyed++;
+			}
+	score += destroyed * DESTROYED_BLOCK_SCORE;
+}
+
+function mostCommonColor() {
+	const counts = new Array(COLORS.length).fill(0);
+	for (const value of board.flat()) if (value) counts[value]++;
+	const highest = Math.max(...counts);
+	return highest > 0 ? counts.indexOf(highest) : 0;
+}
+
+function compactColumns() {
+	for (let c = 0; c < COLS; c++) {
+		const stack = board.map(row => row[c]).filter(Boolean);
+		for (let r = ROWS - 1, i = stack.length - 1; r >= 0; r--, i--)
+			board[r][c] = i >= 0 ? stack[i] : 0;
+	}
+}
+
+const POWER_UP_EFFECTS = {
+	bomb(x, y) {
+		const centerRow = impactRow(y);
+		destroyBlocks(
+			(r, c) => Math.abs(r - centerRow) <= 1 && Math.abs(c - x) <= 1
+		);
+	},
+	lightning(x, y) {
+		const row = impactRow(y);
+		destroyBlocks((r, c) => r === row || c === x);
+	},
+	tint(x, y) {
+		const target = board[impactRow(y)][x] || mostCommonColor();
+		destroyBlocks((r, c) => board[r][c] === target);
+	},
+	gravity() {
+		compactColumns();
+	},
+	freeze() {
+		freezeRemaining = FREEZE_DURATION;
+	}
+};
+
+function activatePowerUp(kind, x, y) {
+	POWER_UP_EFFECTS[kind](x, y);
+	notice = { text: POWER_UPS[kind].label, remaining: NOTICE_DURATION };
+}
+
 function lockPiece() {
-	merge();
+	if (current.powerUp) activatePowerUp(current.powerUp, current.x, current.y);
+	else merge();
 	clearLines();
 	spawn();
 }
@@ -202,10 +298,30 @@ function updateHUD() {
 	scoreEl.textContent = score.toLocaleString();
 	linesEl.textContent = lines;
 	levelEl.textContent = level;
+	powerUpEl.textContent = `${lines % POWER_UP_EVERY_LINES}/${POWER_UP_EVERY_LINES}`;
+}
+
+function drawPowerUpBlock(context, x, y, kind, size, alpha) {
+	const { color, icon } = POWER_UPS[kind];
+	context.globalAlpha = alpha ?? 1;
+	context.fillStyle = color;
+	context.fillRect(x * size + 1, y * size + 1, size - 2, size - 2);
+	context.strokeStyle = "#ffffff";
+	context.lineWidth = 2;
+	context.strokeRect(x * size + 2, y * size + 2, size - 4, size - 4);
+	context.font = `${Math.floor(size * 0.6)}px sans-serif`;
+	context.textAlign = "center";
+	context.textBaseline = "middle";
+	context.fillText(icon, x * size + size / 2, y * size + size / 2 + 1);
+	context.globalAlpha = 1;
 }
 
 function drawBlock(context, x, y, colorIndex, size, alpha) {
 	if (!colorIndex) return;
+	if (typeof colorIndex === "string") {
+		drawPowerUpBlock(context, x, y, colorIndex, size, alpha);
+		return;
+	}
 	const color = COLORS[colorIndex];
 	context.globalAlpha = alpha ?? 1;
 	context.fillStyle = color;
@@ -252,6 +368,28 @@ function draw() {
 	for (let r = 0; r < current.shape.length; r++)
 		for (let c = 0; c < current.shape[r].length; c++)
 			drawBlock(ctx, current.x + c, current.y + r, current.shape[r][c], BLOCK);
+
+	drawStatus();
+}
+
+function drawCenteredText(text, y) {
+	ctx.font = "bold 22px 'Courier New', monospace";
+	ctx.textAlign = "center";
+	ctx.textBaseline = "middle";
+	ctx.lineWidth = 4;
+	ctx.strokeStyle = "rgba(0, 0, 0, 0.7)";
+	ctx.strokeText(text, canvas.width / 2, y);
+	ctx.fillStyle = "#ffffff";
+	ctx.fillText(text, canvas.width / 2, y);
+}
+
+function drawStatus() {
+	if (freezeRemaining > 0) {
+		ctx.fillStyle = "rgba(41, 182, 246, 0.15)";
+		ctx.fillRect(0, 0, canvas.width, canvas.height);
+		drawCenteredText(`❄️ ${Math.ceil(freezeRemaining / 1000)}s`, 24);
+	}
+	if (notice) drawCenteredText(notice.text, canvas.height / 3);
 }
 
 function drawNext() {
@@ -287,10 +425,19 @@ function togglePause() {
 	}
 }
 
+function tickTimers(dt) {
+	freezeRemaining = Math.max(0, freezeRemaining - dt);
+	if (notice) {
+		notice.remaining -= dt;
+		if (notice.remaining <= 0) notice = null;
+	}
+}
+
 function loop(ts) {
 	const dt = ts - lastTime;
 	lastTime = ts;
-	dropAccum += dt;
+	tickTimers(dt);
+	if (freezeRemaining === 0) dropAccum += dt;
 	if (dropAccum >= dropInterval) {
 		dropAccum = 0;
 		if (!collide(current.shape, current.x, current.y + 1)) {
@@ -314,6 +461,9 @@ function init() {
 	dropInterval = 1000;
 	dropAccum = 0;
 	lastTime = performance.now();
+	pendingPowerUp = false;
+	freezeRemaining = 0;
+	notice = null;
 	next = randomPiece();
 	spawn();
 	updateHUD();

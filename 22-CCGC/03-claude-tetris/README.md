@@ -43,6 +43,15 @@ Es una versión jugable del Tetris clásico con todas las mecánicas que esperar
 - **Niveles** que aumentan cada 10 líneas y aceleran la caída.
 - **Pausa** y **Game Over** con opción de reinicio.
 - **Tema oscuro / claro**: arranca en oscuro y se cambia con el interruptor de la esquina superior derecha.
+- **Power-ups**: cada 5 líneas la siguiente pieza es un bloque especial de 1×1 (visible en `NEXT`) cuyo efecto se activa al aterrizar. Cada bloque destruido suma 10 puntos.
+
+| Power-up     | Efecto                                                                                              |
+| ------------ | --------------------------------------------------------------------------------------------------- |
+| 💣 Bomba     | Destruye un área de 3×3 centrada en el bloque sobre el que aterriza                                 |
+| ⚡ Rayo      | Destruye la fila donde aterriza y su columna completa                                               |
+| 🎨 Tinte     | Destruye todos los bloques del color del bloque sobre el que aterriza (o del color más común si cae al suelo) |
+| ⬇️ Gravedad  | Compacta cada columna eliminando huecos; las filas que se completen se limpian y puntúan            |
+| ❄️ Congelar  | Detiene la caída automática 5 segundos (puedes seguir moviendo y soltando la pieza)                 |
 
 ---
 
