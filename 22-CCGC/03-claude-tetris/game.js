@@ -17,7 +17,8 @@ const COLORS = [
 	"#4db6ac", // U - teal
 	"#f48fb1", // Y - pink
 	"#90a4ae", // single - blue grey
-	"#a1887f" // hollow - brown
+	"#a1887f", // hollow - brown
+	"#78788a" // garbage - grey
 ];
 
 const PIECES = [
@@ -85,6 +86,7 @@ const STANDARD_PIECE_TYPES = [1, 2, 3, 4, 5, 6, 7];
 const EXTRA_PIECE_TYPES = [8, 9, 10, 12];
 const SINGLE_PIECE_TYPE = 11;
 const EXTRA_PIECE_CHANCE = 0.1;
+const GARBAGE_CELL = 13;
 const TETRIS_LINES = 4;
 const T_PIECE_TYPE = 3;
 
@@ -103,6 +105,46 @@ const CLEAR_ROOT_FREQUENCY = 330;
 const CLEAR_NOTE_STEP_MS = 70;
 const MAX_COMBO_PITCH_STEPS = 12;
 const PERFECT_CLEAR_TONES = [523, 659, 784, 1047, 1319];
+
+const CHALLENGES = {
+	classic: {
+		label: "Clásico",
+		description: "Sin objetivo: sobrevive y puntúa"
+	},
+	sprint: {
+		label: "Sprint",
+		description: "Limpia 40 líneas en 2 minutos",
+		goalLines: 40,
+		timeLimit: 120000
+	},
+	garbage: {
+		label: "Basura",
+		description: "Sobrevive 60 s con basura subiendo cada 10 s",
+		surviveTime: 60000,
+		garbageEvery: 10000
+	},
+	prefilled: {
+		label: "Bloques fijos",
+		description: "Limpia 15 líneas con el tablero ya ocupado",
+		goalLines: 15,
+		prefilledRows: 6
+	},
+	invisible: {
+		label: "Invisibles",
+		description: "Limpia 10 líneas: las piezas se ocultan al asentarse",
+		goalLines: 10,
+		invisibleLocked: true
+	},
+	reverse: {
+		label: "Rotación inversa",
+		description: "Limpia 10 líneas desde el nivel 8 con el giro invertido",
+		goalLines: 10,
+		startLevel: 8,
+		reverseRotation: true
+	}
+};
+const PREFILL_FILL_CHANCE = 0.7;
+const INVISIBLE_REVEAL_DURATION = 1000;
 
 const POWER_UP_EVERY_LINES = 5;
 const FREEZE_DURATION = 5000;
@@ -128,6 +170,9 @@ const linesEl = document.getElementById("lines");
 const levelEl = document.getElementById("level");
 const powerUpEl = document.getElementById("power-up-progress");
 const comboEl = document.getElementById("combo");
+const modeSelect = document.getElementById("mode-select");
+const objectiveTextEl = document.getElementById("objective-text");
+const objectiveProgressEl = document.getElementById("objective-progress");
 const overlay = document.getElementById("overlay");
 const overlayTitle = document.getElementById("overlay-title");
 const overlayScore = document.getElementById("overlay-score");
@@ -156,8 +201,13 @@ let board,
 	combo,
 	backToBack,
 	lastMoveWasRotation,
-	flash;
+	flash,
+	challenge,
+	elapsed,
+	garbageAccum,
+	revealRemaining;
 
+let modeKey = "classic";
 let muted = false;
 let audioContext;
 
@@ -223,8 +273,13 @@ function rotateCW(shape) {
 	return result;
 }
 
+function rotateCCW(shape) {
+	return rotateCW(rotateCW(rotateCW(shape)));
+}
+
 function tryRotate() {
-	const rotated = rotateCW(current.shape);
+	const rotate = challenge.reverseRotation ? rotateCCW : rotateCW;
+	const rotated = rotate(current.shape);
 	const kicks = [0, -1, 1, -2, 2];
 	for (const kick of kicks) {
 		if (!collide(rotated, current.x + kick, current.y)) {
@@ -285,6 +340,14 @@ function isBoardEmpty() {
 	return board.every(row => row.every(v => v === 0));
 }
 
+function baseLevel() {
+	return challenge.startLevel ?? 1;
+}
+
+function dropIntervalFor(forLevel) {
+	return Math.max(100, 1000 - (forLevel - 1) * 90);
+}
+
 function advanceLineProgress(cleared) {
 	const powerUpsBefore = Math.floor(lines / POWER_UP_EVERY_LINES);
 	lines += cleared;
@@ -292,8 +355,8 @@ function advanceLineProgress(cleared) {
 		pendingPowerUp = true;
 	}
 	if (cleared === TETRIS_LINES) pendingSingle = true;
-	level = Math.floor(lines / 10) + 1;
-	dropInterval = Math.max(100, 1000 - (level - 1) * 90);
+	level = baseLevel() + Math.floor(lines / 10);
+	dropInterval = dropIntervalFor(level);
 }
 
 function clearTones(cleared, isSpecial) {
@@ -440,7 +503,81 @@ function lockPiece() {
 		merge();
 	}
 	clearLines(tSpin);
+	if (challenge.invisibleLocked) revealRemaining = INVISIBLE_REVEAL_DURATION;
+	if (reachedGoalLines()) {
+		endGame("¡RETO SUPERADO!", true);
+		return;
+	}
 	spawn();
+}
+
+function reachedGoalLines() {
+	return challenge.goalLines && lines >= challenge.goalLines;
+}
+
+function prefillBoard(rows) {
+	for (let r = ROWS - rows; r < ROWS; r++) {
+		const row = Array.from({ length: COLS }, () =>
+			Math.random() < PREFILL_FILL_CHANCE ? pickRandom(STANDARD_PIECE_TYPES) : 0
+		);
+		row[Math.floor(Math.random() * COLS)] = 0;
+		board[r] = row;
+	}
+}
+
+function riseGarbage() {
+	const pushedOut = board.shift().some(Boolean);
+	const hole = Math.floor(Math.random() * COLS);
+	board.push(
+		Array.from({ length: COLS }, (_, c) => (c === hole ? 0 : GARBAGE_CELL))
+	);
+	while (collide(current.shape, current.x, current.y)) current.y--;
+	if (pushedOut) endGame();
+}
+
+function updateChallenge(dt) {
+	elapsed += dt;
+	if (challenge.garbageEvery) {
+		garbageAccum += dt;
+		if (garbageAccum >= challenge.garbageEvery) {
+			garbageAccum -= challenge.garbageEvery;
+			riseGarbage();
+		}
+	}
+	if (gameOver) return;
+	if (challenge.surviveTime && elapsed >= challenge.surviveTime) {
+		endGame("¡RETO SUPERADO!", true);
+	} else if (challenge.timeLimit && elapsed >= challenge.timeLimit) {
+		endGame("TIEMPO AGOTADO");
+	}
+}
+
+function formatClock(totalSeconds) {
+	const minutes = Math.floor(totalSeconds / 60);
+	const seconds = String(totalSeconds % 60).padStart(2, "0");
+	return `${minutes}:${seconds}`;
+}
+
+function objectiveStatus() {
+	const parts = [];
+	if (challenge.goalLines)
+		parts.push(`Líneas ${Math.min(lines, challenge.goalLines)}/${challenge.goalLines}`);
+	const totalTime = challenge.timeLimit ?? challenge.surviveTime;
+	if (totalTime) {
+		const remaining = Math.max(0, totalTime - elapsed);
+		parts.push(`Tiempo ${formatClock(Math.ceil(remaining / 1000))}`);
+	}
+	if (challenge.garbageEvery) {
+		const untilGarbage = challenge.garbageEvery - garbageAccum;
+		parts.push(`Basura en ${Math.ceil(untilGarbage / 1000)}s`);
+	}
+	return parts.join("  ·  ");
+}
+
+function updateObjectiveHUD() {
+	const status = objectiveStatus();
+	if (objectiveProgressEl.textContent !== status)
+		objectiveProgressEl.textContent = status;
 }
 
 function playTones(frequencies, stepMs) {
@@ -479,6 +616,7 @@ function updateHUD() {
 	levelEl.textContent = level;
 	powerUpEl.textContent = `${lines % POWER_UP_EVERY_LINES}/${POWER_UP_EVERY_LINES}`;
 	comboEl.textContent = combo > 0 ? `x${combo}` : "-";
+	updateObjectiveHUD();
 }
 
 function drawPowerUpBlock(context, x, y, kind, size, alpha) {
@@ -534,8 +672,9 @@ function draw() {
 	drawGrid();
 
 	// board
-	for (let r = 0; r < ROWS; r++)
-		for (let c = 0; c < COLS; c++) drawBlock(ctx, c, r, board[r][c], BLOCK);
+	if (!challenge.invisibleLocked || revealRemaining > 0)
+		for (let r = 0; r < ROWS; r++)
+			for (let c = 0; c < COLS; c++) drawBlock(ctx, c, r, board[r][c], BLOCK);
 
 	// ghost
 	const gy = ghostY();
@@ -590,11 +729,14 @@ function drawNext() {
 			drawBlock(nextCtx, offX + c, offY + r, shape[r][c], NB);
 }
 
-function endGame() {
+function endGame(title = "GAME OVER", won = false) {
 	gameOver = true;
 	cancelAnimationFrame(animId);
-	overlayTitle.textContent = "GAME OVER";
+	overlayTitle.textContent = title;
+	overlayTitle.classList.toggle("victory", won);
 	overlayScore.textContent = `Puntuación: ${score.toLocaleString()}`;
+	if (won)
+		overlayScore.textContent += `  ·  Tiempo ${formatClock(Math.floor(elapsed / 1000))}`;
 	overlay.classList.remove("hidden");
 }
 
@@ -615,6 +757,7 @@ function togglePause() {
 function tickTimers(dt) {
 	freezeRemaining = Math.max(0, freezeRemaining - dt);
 	flash = Math.max(0, flash - dt);
+	revealRemaining = Math.max(0, revealRemaining - dt);
 	if (notice) {
 		notice.remaining -= dt;
 		if (notice.remaining <= 0) notice = null;
@@ -625,24 +768,30 @@ function loop(ts) {
 	const dt = ts - lastTime;
 	lastTime = ts;
 	tickTimers(dt);
-	if (freezeRemaining === 0) dropAccum += dt;
-	if (dropAccum >= dropInterval) {
-		dropAccum = 0;
-		if (!tryMove(0, 1)) lockPiece();
+	updateChallenge(dt);
+	if (!gameOver) {
+		if (freezeRemaining === 0) dropAccum += dt;
+		if (dropAccum >= dropInterval) {
+			dropAccum = 0;
+			if (!tryMove(0, 1)) lockPiece();
+		}
 	}
 	draw();
+	updateObjectiveHUD();
 	if (gameOver) return;
 	animId = requestAnimationFrame(loop);
 }
 
 function init() {
+	challenge = CHALLENGES[modeKey];
 	board = createBoard();
+	if (challenge.prefilledRows) prefillBoard(challenge.prefilledRows);
 	score = 0;
 	lines = 0;
-	level = 1;
+	level = baseLevel();
 	paused = false;
 	gameOver = false;
-	dropInterval = 1000;
+	dropInterval = dropIntervalFor(level);
 	dropAccum = 0;
 	lastTime = performance.now();
 	pendingPowerUp = false;
@@ -652,6 +801,11 @@ function init() {
 	combo = 0;
 	backToBack = false;
 	flash = 0;
+	elapsed = 0;
+	garbageAccum = 0;
+	revealRemaining = 0;
+	objectiveTextEl.textContent = challenge.description;
+	overlayTitle.classList.remove("victory");
 	next = randomPiece();
 	spawn();
 	updateHUD();
@@ -672,16 +826,20 @@ document.addEventListener("keydown", e => {
 	if (paused || gameOver) return;
 	switch (e.code) {
 		case "ArrowLeft":
+			e.preventDefault();
 			tryMove(-1, 0);
 			break;
 		case "ArrowRight":
+			e.preventDefault();
 			tryMove(1, 0);
 			break;
 		case "ArrowDown":
+			e.preventDefault();
 			softDrop();
 			break;
 		case "ArrowUp":
 		case "KeyX":
+			e.preventDefault();
 			tryRotate();
 			break;
 		case "Space":
@@ -693,6 +851,19 @@ document.addEventListener("keydown", e => {
 });
 
 restartBtn.addEventListener("click", init);
+
+for (const [key, { label }] of Object.entries(CHALLENGES)) {
+	const option = document.createElement("option");
+	option.value = key;
+	option.textContent = label;
+	modeSelect.append(option);
+}
+
+modeSelect.addEventListener("change", () => {
+	modeKey = modeSelect.value;
+	modeSelect.blur();
+	init();
+});
 
 function applyTheme(theme) {
 	const isLight = theme === "light";

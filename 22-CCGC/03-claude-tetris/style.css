@@ -16,6 +16,7 @@
   --overlay-bg: rgba(10, 10, 20, 0.75);
   --board-shadow: rgba(0, 0, 0, 0.6);
   --danger: #e57373;
+  --success: #81c784;
   --grid-line: #22222e;
 }
 
@@ -37,6 +38,7 @@
   --overlay-bg: rgba(243, 244, 248, 0.8);
   --board-shadow: rgba(40, 50, 90, 0.18);
   --danger: #d32f2f;
+  --success: #2e7d32;
   --grid-line: #e3e5ee;
 }
 
@@ -67,6 +69,42 @@ body {
   padding-left: 14px;
   color: var(--accent);
   text-shadow: 0 0 12px var(--accent-glow), 0 0 32px var(--accent-glow-soft);
+}
+
+.mode-bar {
+  width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mode-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+#mode-select {
+  background: var(--board-bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+#objective-progress {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+#objective-text {
+  font-size: 12px;
+  color: var(--muted);
 }
 
 .wrapper {
@@ -188,6 +226,10 @@ kbd {
   font-weight: 800;
   letter-spacing: 4px;
   color: var(--danger);
+}
+
+#overlay-title.victory {
+  color: var(--success);
 }
 
 #overlay-score {

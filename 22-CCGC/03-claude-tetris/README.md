@@ -53,6 +53,17 @@ Es una versión jugable del Tetris clásico con todas las mecánicas que esperar
 | Back-to-Back    | Encadenar dos limpiezas "difíciles" (Tetris o T-spin con líneas) sin una limpieza normal en medio      | × 1,5 sobre la limpieza                                             |
 | Perfect Clear   | Dejar el tablero completamente vacío tras limpiar líneas                                               | +2000 × nivel                                                       |
 
+- **Modos de desafío**: el selector sobre el tablero cambia de modo (reinicia la partida) y muestra el objetivo con su progreso. Ganar muestra _¡RETO SUPERADO!_ con tu puntuación y tiempo.
+
+| Modo             | Objetivo                                                                               | Particularidad                                                        |
+| ---------------- | -------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| Clásico          | Ninguno                                                                                | El juego de siempre                                                   |
+| Sprint           | Limpiar 40 líneas en 2 minutos                                                         | Si se agota el tiempo, pierdes                                        |
+| Basura           | Sobrevivir 60 s                                                                        | Cada 10 s sube una fila de basura con un hueco; si empuja bloques fuera del tablero, pierdes |
+| Bloques fijos    | Limpiar 15 líneas                                                                      | Empiezas con las 6 filas inferiores ya ocupadas (cada una con algún hueco) |
+| Invisibles       | Limpiar 10 líneas                                                                      | Las piezas asentadas solo se ven 1 s tras cada bloqueo                |
+| Rotación inversa | Limpiar 10 líneas                                                                      | Empiezas en el nivel 8 y `↑`/`X` giran en sentido antihorario         |
+
 - **Power-ups**: cada 5 líneas la siguiente pieza es un bloque especial de 1×1 (visible en `NEXT`) cuyo efecto se activa al aterrizar. Cada bloque destruido suma 10 puntos.
 
 | Power-up     | Efecto                                                                                              |
