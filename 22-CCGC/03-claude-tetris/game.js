@@ -143,6 +143,14 @@ const CHALLENGES = {
 		reverseRotation: true
 	}
 };
+const ENERGY_MAX = 100;
+const ENERGY_PER_LINE = 12;
+const LOOKAHEAD_COUNT = 5;
+const SLOW_DURATION = 10000;
+const SLOW_FACTOR = 0.4;
+const QUEUE_BLOCK = 15;
+const QUEUE_SLOT_BLOCKS = 4;
+
 const PREFILL_FILL_CHANCE = 0.7;
 const INVISIBLE_REVEAL_DURATION = 1000;
 
@@ -170,6 +178,14 @@ const linesEl = document.getElementById("lines");
 const levelEl = document.getElementById("level");
 const powerUpEl = document.getElementById("power-up-progress");
 const comboEl = document.getElementById("combo");
+const energyBar = document.getElementById("energy-bar");
+const energyFill = document.getElementById("energy-fill");
+const energyHint = document.getElementById("energy-hint");
+const queueSection = document.getElementById("queue-section");
+const queueCanvas = document.getElementById("queue-canvas");
+const queueCtx = queueCanvas.getContext("2d");
+const abilityMenu = document.getElementById("ability-menu");
+const abilityList = document.getElementById("ability-list");
 const modeSelect = document.getElementById("mode-select");
 const objectiveTextEl = document.getElementById("objective-text");
 const objectiveProgressEl = document.getElementById("objective-progress");
@@ -205,7 +221,12 @@ let board,
 	challenge,
 	elapsed,
 	garbageAccum,
-	revealRemaining;
+	revealRemaining,
+	energy,
+	queue,
+	abilityMenuOpen,
+	slowRemaining,
+	undoSnapshot;
 
 let modeKey = "classic";
 let muted = false;
@@ -215,8 +236,7 @@ function createBoard() {
 	return Array.from({ length: ROWS }, () => new Array(COLS).fill(0));
 }
 
-function powerUpPiece() {
-	const kind = pickRandom(POWER_UP_KINDS);
+function powerUpPiece(kind = pickRandom(POWER_UP_KINDS)) {
 	return {
 		type: 0,
 		powerUp: kind,
@@ -235,13 +255,7 @@ function randomPieceType() {
 	return pickRandom(STANDARD_PIECE_TYPES);
 }
 
-function randomPiece() {
-	if (pendingPowerUp) {
-		pendingPowerUp = false;
-		return powerUpPiece();
-	}
-	const type = pendingSingle ? SINGLE_PIECE_TYPE : randomPieceType();
-	pendingSingle = false;
+function createPiece(type) {
 	const shape = PIECES[type].map(row => [...row]);
 	return {
 		type,
@@ -249,6 +263,20 @@ function randomPiece() {
 		x: Math.floor(COLS / 2) - Math.floor(shape[0].length / 2),
 		y: 0
 	};
+}
+
+function freshCopy(piece) {
+	return piece.powerUp ? powerUpPiece(piece.powerUp) : createPiece(piece.type);
+}
+
+function randomPiece() {
+	if (pendingPowerUp) {
+		pendingPowerUp = false;
+		return powerUpPiece();
+	}
+	const type = pendingSingle ? SINGLE_PIECE_TYPE : randomPieceType();
+	pendingSingle = false;
+	return createPiece(type);
 }
 
 function collide(shape, ox, oy) {
@@ -355,6 +383,7 @@ function advanceLineProgress(cleared) {
 		pendingPowerUp = true;
 	}
 	if (cleared === TETRIS_LINES) pendingSingle = true;
+	energy = Math.min(ENERGY_MAX, energy + cleared * ENERGY_PER_LINE);
 	level = baseLevel() + Math.floor(lines / 10);
 	dropInterval = dropIntervalFor(level);
 }
@@ -494,7 +523,23 @@ function activatePowerUp(kind, x, y) {
 	showNotice(POWER_UPS[kind].label);
 }
 
+function saveUndoSnapshot() {
+	undoSnapshot = {
+		board: board.map(row => [...row]),
+		piece: current,
+		score,
+		lines,
+		level,
+		dropInterval,
+		combo,
+		backToBack,
+		pendingPowerUp,
+		pendingSingle
+	};
+}
+
 function lockPiece() {
+	saveUndoSnapshot();
 	let tSpin = false;
 	if (current.powerUp) {
 		activatePowerUp(current.powerUp, current.x, current.y);
@@ -526,6 +571,7 @@ function prefillBoard(rows) {
 }
 
 function riseGarbage() {
+	undoSnapshot = null;
 	const pushedOut = board.shift().some(Boolean);
 	const hole = Math.floor(Math.random() * COLS);
 	board.push(
@@ -603,11 +649,135 @@ function playTones(frequencies, stepMs) {
 function spawn() {
 	current = next;
 	lastMoveWasRotation = false;
-	next = randomPiece();
+	next = queue.length ? queue.shift() : randomPiece();
 	if (collide(current.shape, current.x, current.y)) {
 		endGame();
 	}
-	drawNext();
+	drawPreviews();
+}
+
+function revealUpcoming() {
+	while (queue.length < LOOKAHEAD_COUNT - 1) queue.push(randomPiece());
+	return true;
+}
+
+function swapCurrentPiece() {
+	const candidates = STANDARD_PIECE_TYPES.filter(type => type !== current.type);
+	const replacement = createPiece(pickRandom(candidates));
+	if (collide(replacement.shape, replacement.x, replacement.y)) return false;
+	current = replacement;
+	lastMoveWasRotation = false;
+	return true;
+}
+
+function slowTime() {
+	slowRemaining = SLOW_DURATION;
+	return true;
+}
+
+function undoLastPlacement() {
+	const snapshot = undoSnapshot;
+	board = snapshot.board.map(row => [...row]);
+	({
+		score,
+		lines,
+		level,
+		dropInterval,
+		combo,
+		backToBack,
+		pendingPowerUp,
+		pendingSingle
+	} = snapshot);
+	queue.unshift(next);
+	next = current;
+	current = freshCopy(snapshot.piece);
+	lastMoveWasRotation = false;
+	undoSnapshot = null;
+	dropAccum = 0;
+	return true;
+}
+
+const ABILITIES = [
+	{
+		label: "Ver 5 piezas",
+		description: "Muestra las próximas 5 piezas",
+		cost: 30,
+		isAvailable: () => true,
+		use: revealUpcoming
+	},
+	{
+		label: "Cambiar pieza",
+		description: "Sustituye la actual por otra al azar",
+		cost: 40,
+		isAvailable: () => true,
+		use: swapCurrentPiece
+	},
+	{
+		label: "Ralentizar",
+		description: "Caída más lenta durante 10 s",
+		cost: 50,
+		isAvailable: () => true,
+		use: slowTime
+	},
+	{
+		label: "Deshacer",
+		description: "Revierte la última colocación",
+		cost: 60,
+		isAvailable: () => undoSnapshot !== null,
+		use: undoLastPlacement
+	}
+];
+const MIN_ABILITY_COST = Math.min(...ABILITIES.map(ability => ability.cost));
+
+function canUseAbility(ability) {
+	return energy >= ability.cost && ability.isAvailable();
+}
+
+function renderAbilityMenu() {
+	abilityList.replaceChildren(
+		...ABILITIES.map((ability, index) => {
+			const item = document.createElement("li");
+			item.className = "ability-item";
+			item.classList.toggle("disabled", !canUseAbility(ability));
+			item.innerHTML = `<kbd>${index + 1}</kbd><span class="ability-text">${ability.label}<small>${ability.description}</small></span><span class="ability-cost">${ability.cost}</span>`;
+			item.addEventListener("click", () => useAbility(ability));
+			return item;
+		})
+	);
+}
+
+function openAbilityMenu() {
+	if (paused || gameOver || abilityMenuOpen || energy < MIN_ABILITY_COST) return;
+	abilityMenuOpen = true;
+	cancelAnimationFrame(animId);
+	renderAbilityMenu();
+	abilityMenu.classList.remove("hidden");
+}
+
+function closeAbilityMenu() {
+	abilityMenuOpen = false;
+	abilityMenu.classList.add("hidden");
+	lastTime = performance.now();
+	loop(lastTime);
+}
+
+function useAbility(ability) {
+	if (!canUseAbility(ability) || !ability.use()) return;
+	energy -= ability.cost;
+	showNotice(ability.label.toUpperCase());
+	drawPreviews();
+	updateHUD();
+	closeAbilityMenu();
+}
+
+function handleAbilityMenuKey(e) {
+	if (e.code === "Escape" || e.code === "KeyE") {
+		e.preventDefault();
+		closeAbilityMenu();
+		return;
+	}
+	const ability = ABILITIES[Number(e.key) - 1];
+	if (ability) useAbility(ability);
 }
 
 function updateHUD() {
@@ -616,6 +786,12 @@ function updateHUD() {
 	levelEl.textContent = level;
 	powerUpEl.textContent = `${lines % POWER_UP_EVERY_LINES}/${POWER_UP_EVERY_LINES}`;
 	comboEl.textContent = combo > 0 ? `x${combo}` : "-";
+	energyFill.style.width = `${(energy / ENERGY_MAX) * 100}%`;
+	const abilityReady = energy >= MIN_ABILITY_COST;
+	energyBar.classList.toggle("ready", abilityReady);
+	energyHint.textContent = abilityReady
+		? "E: elegir habilidad"
+		: "Se carga al limpiar líneas";
 	updateObjectiveHUD();
 }
 
@@ -708,6 +884,12 @@ function drawStatus() {
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
 		drawCenteredText(`❄️ ${Math.ceil(freezeRemaining / 1000)}s`, 24);
 	}
+	if (slowRemaining > 0) {
+		ctx.fillStyle = "rgba(171, 71, 188, 0.1)";
+		ctx.fillRect(0, 0, canvas.width, canvas.height);
+		const y = freezeRemaining > 0 ? 52 : 24;
+		drawCenteredText(`🐢 ${Math.ceil(slowRemaining / 1000)}s`, y);
+	}
 	if (flash > 0) {
 		ctx.fillStyle = `rgba(255, 235, 130, ${0.35 * (flash / FLASH_DURATION)})`;
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -716,6 +898,26 @@ function drawStatus() {
 		notice.lines.forEach((line, i) =>
 			drawCenteredText(line, canvas.height / 3 + i * NOTICE_LINE_HEIGHT)
 		);
+}
+
+function drawPreviews() {
+	drawNext();
+	drawQueue();
+}
+
+function drawQueue() {
+	queueSection.classList.toggle("hidden", queue.length === 0);
+	queueCtx.clearRect(0, 0, queueCanvas.width, queueCanvas.height);
+	const slotWidthBlocks = queueCanvas.width / QUEUE_BLOCK;
+	queue.forEach((piece, slot) => {
+		const shape = piece.shape;
+		const offX = Math.floor((slotWidthBlocks - shape[0].length) / 2);
+		const offY =
+			slot * QUEUE_SLOT_BLOCKS + Math.floor((QUEUE_SLOT_BLOCKS - shape.length) / 2);
+		for (let r = 0; r < shape.length; r++)
+			for (let c = 0; c < shape[r].length; c++)
+				drawBlock(queueCtx, offX + c, offY + r, shape[r][c], QUEUE_BLOCK);
+	});
 }
 
 function drawNext() {
@@ -758,6 +960,7 @@ function tickTimers(dt) {
 	freezeRemaining = Math.max(0, freezeRemaining - dt);
 	flash = Math.max(0, flash - dt);
 	revealRemaining = Math.max(0, revealRemaining - dt);
+	slowRemaining = Math.max(0, slowRemaining - dt);
 	if (notice) {
 		notice.remaining -= dt;
 		if (notice.remaining <= 0) notice = null;
@@ -770,7 +973,8 @@ function loop(ts) {
 	tickTimers(dt);
 	updateChallenge(dt);
 	if (!gameOver) {
-		if (freezeRemaining === 0) dropAccum += dt;
+		if (freezeRemaining === 0)
+			dropAccum += slowRemaining > 0 ? dt * SLOW_FACTOR : dt;
 		if (dropAccum >= dropInterval) {
 			dropAccum = 0;
 			if (!tryMove(0, 1)) lockPiece();
@@ -804,6 +1008,12 @@ function init() {
 	elapsed = 0;
 	garbageAccum = 0;
 	revealRemaining = 0;
+	energy = 0;
+	queue = [];
+	slowRemaining = 0;
+	undoSnapshot = null;
+	abilityMenuOpen = false;
+	abilityMenu.classList.add("hidden");
 	objectiveTextEl.textContent = challenge.description;
 	overlayTitle.classList.remove("victory");
 	next = randomPiece();
@@ -815,6 +1025,10 @@ function init() {
 }
 
 document.addEventListener("keydown", e => {
+	if (abilityMenuOpen) {
+		handleAbilityMenuKey(e);
+		return;
+	}
 	if (e.code === "KeyP") {
 		togglePause();
 		return;
@@ -825,6 +1039,9 @@ document.addEventListener("keydown", e => {
 	}
 	if (paused || gameOver) return;
 	switch (e.code) {
+		case "KeyE":
+			openAbilityMenu();
+			break;
 		case "ArrowLeft":
 			e.preventDefault();
 			tryMove(-1, 0);

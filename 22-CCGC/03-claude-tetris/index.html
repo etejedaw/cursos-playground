@@ -24,7 +24,38 @@
 
   <div class="wrapper">
     <div class="game-container">
-      <canvas id="board" width="300" height="600"></canvas>
+      <aside class="panel panel-left">
+        <div class="panel-section">
+          <span class="label">ENERGÍA</span>
+          <div id="energy-bar" class="energy-bar"><div id="energy-fill" class="energy-fill"></div></div>
+          <span id="energy-hint" class="energy-hint">Se carga al limpiar líneas</span>
+        </div>
+
+        <div id="queue-section" class="panel-section hidden">
+          <span class="label">PRÓXIMAS</span>
+          <canvas id="queue-canvas" width="120" height="240"></canvas>
+        </div>
+      </aside>
+
+      <div class="board-wrap">
+        <canvas id="board" width="300" height="600"></canvas>
+
+        <div id="overlay" class="overlay hidden">
+          <div class="overlay-box">
+            <p id="overlay-title">GAME OVER</p>
+            <p id="overlay-score"></p>
+            <button id="restart-btn">Reiniciar</button>
+          </div>
+        </div>
+
+        <div id="ability-menu" class="overlay hidden">
+          <div class="overlay-box ability-box">
+            <p class="ability-title">HABILIDADES</p>
+            <ul id="ability-list"></ul>
+            <p class="ability-hint"><kbd>1</kbd>–<kbd>4</kbd> elegir · <kbd>Esc</kbd> cerrar</p>
+          </div>
+        </div>
+      </div>
 
       <aside class="panel">
         <div class="panel-section">
@@ -66,18 +97,11 @@
             <li><kbd>↓</kbd> bajar</li>
             <li><kbd>Space</kbd> caída</li>
             <li><kbd>P</kbd> pausa</li>
+            <li><kbd>E</kbd> habilidades</li>
             <li><kbd>M</kbd> sonido</li>
           </ul>
         </div>
       </aside>
-    </div>
-
-    <div id="overlay" class="overlay hidden">
-      <div class="overlay-box">
-        <p id="overlay-title">GAME OVER</p>
-        <p id="overlay-score"></p>
-        <button id="restart-btn">Reiniciar</button>
-      </div>
     </div>
   </div>
 

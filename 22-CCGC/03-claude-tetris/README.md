@@ -64,6 +64,15 @@ Es una versión jugable del Tetris clásico con todas las mecánicas que esperar
 | Invisibles       | Limpiar 10 líneas                                                                      | Las piezas asentadas solo se ven 1 s tras cada bloqueo                |
 | Rotación inversa | Limpiar 10 líneas                                                                      | Empiezas en el nivel 8 y `↑`/`X` giran en sentido antihorario         |
 
+- **Habilidades**: cada línea limpiada carga 12 puntos de la barra de **energía** (panel izquierdo, máximo 100). Con energía suficiente, `E` abre un menú que pausa la partida; elige con `1`–`4` (o con el ratón) y `Esc`/`E` lo cierra sin gastar nada.
+
+| Tecla | Habilidad       | Coste | Efecto                                                                                                   |
+| ----- | --------------- | ----- | -------------------------------------------------------------------------------------------------------- |
+| `1`   | Ver 5 piezas    | 30    | Muestra la siguiente y las 4 posteriores (panel `PRÓXIMAS`, que se vacía según se van usando)            |
+| `2`   | Cambiar pieza   | 40    | Sustituye la pieza actual por otra estándar al azar, colocada arriba                                     |
+| `3`   | Ralentizar      | 50    | La caída va al 40 % de velocidad durante 10 s                                                            |
+| `4`   | Deshacer        | 60    | Revierte la última colocación (tablero, puntos, líneas, nivel y combo) y te devuelve esa pieza. Solo una vez, y no tras subir basura |
+
 - **Power-ups**: cada 5 líneas la siguiente pieza es un bloque especial de 1×1 (visible en `NEXT`) cuyo efecto se activa al aterrizar. Cada bloque destruido suma 10 puntos.
 
 | Power-up     | Efecto                                                                                              |
@@ -116,6 +125,7 @@ Después abre `http://localhost:8000` en el navegador.
 | `↓`       | Soft drop (bajar más rápido)      |
 | `Espacio` | Hard drop (caída instantánea)     |
 | `P`       | Pausar / reanudar                 |
+| `E`       | Abrir el menú de habilidades      |
 | `M`       | Silenciar / activar el sonido     |
 
 ---
