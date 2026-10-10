@@ -40,10 +40,19 @@ Es una versión jugable del Tetris clásico con todas las mecánicas que esperar
 - **Soft drop** (bajada acelerada) y **hard drop** (caída instantánea).
 - **Pieza fantasma** (_ghost piece_): muestra dónde aterrizará la pieza actual.
 - **Vista previa** de la siguiente pieza.
-- **Sistema de puntuación** clásico de Tetris (100 / 300 / 500 / 800 multiplicado por nivel).
+- **Sistema de puntuación** clásico de Tetris (100 / 300 / 500 / 800 multiplicado por nivel) con combos, T-spin, Back-to-Back y Perfect Clear (ver abajo).
 - **Niveles** que aumentan cada 10 líneas y aceleran la caída.
 - **Pausa** y **Game Over** con opción de reinicio.
 - **Tema oscuro / claro**: arranca en oscuro y se cambia con el interruptor de la esquina superior derecha.
+- **Combos y bonus**: cada línea limpiada suma puntos extra según cómo la consigas. Al encadenar se muestra un aviso sobre el tablero, un destello y una nota que sube de tono con el combo.
+
+| Bonus           | Cómo se consigue                                                                                       | Efecto                                                              |
+| --------------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------- |
+| Combo           | Limpiar líneas con piezas consecutivas (se rompe al colocar una pieza sin limpiar)                     | Puntos de la limpieza × número de combo (x2, x3, x4…)               |
+| T-spin          | Bloquear una `T` justo después de rotarla con al menos 3 de las 4 esquinas de su caja ocupadas         | 400 / 800 / 1200 / 1600 × nivel para 0 / 1 / 2 / 3 líneas           |
+| Back-to-Back    | Encadenar dos limpiezas "difíciles" (Tetris o T-spin con líneas) sin una limpieza normal en medio      | × 1,5 sobre la limpieza                                             |
+| Perfect Clear   | Dejar el tablero completamente vacío tras limpiar líneas                                               | +2000 × nivel                                                       |
+
 - **Power-ups**: cada 5 líneas la siguiente pieza es un bloque especial de 1×1 (visible en `NEXT`) cuyo efecto se activa al aterrizar. Cada bloque destruido suma 10 puntos.
 
 | Power-up     | Efecto                                                                                              |
@@ -96,6 +105,7 @@ Después abre `http://localhost:8000` en el navegador.
 | `↓`       | Soft drop (bajar más rápido)      |
 | `Espacio` | Hard drop (caída instantánea)     |
 | `P`       | Pausar / reanudar                 |
+| `M`       | Silenciar / activar el sonido     |
 
 ---
 

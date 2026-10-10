@@ -102,6 +102,15 @@ body {
   gap: 6px;
 }
 
+.panel-row {
+  display: flex;
+  gap: 16px;
+}
+
+.panel-row .panel-section {
+  flex: 1;
+}
+
 .label {
   font-size: 10px;
   letter-spacing: 2px;
