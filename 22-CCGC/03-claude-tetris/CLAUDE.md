@@ -40,7 +40,6 @@ Tres archivos: `index.html` (canvas del tablero 300×600, canvas `#next-canvas` 
 ## Bugs conocidos en el código actual
 
 - Reanudar la pausa no oculta el overlay: `togglePause()` en la rama `!paused` no hace `overlay.classList.add('hidden')`.
-- Si el game over ocurre por gravedad (dentro de `loop`), `endGame()` cancela el frame actual pero `loop` vuelve a hacer `requestAnimationFrame` al final, así que el bucle sigue corriendo y fusionando piezas tras el GAME OVER. Por hard/soft drop (desde `keydown`) sí se detiene.
 
 ## Notas
 
