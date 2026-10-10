@@ -183,6 +183,18 @@ body {
   border-radius: 4px;
 }
 
+#hold-canvas {
+  display: block;
+  border: 1px solid var(--border);
+  background: var(--board-bg);
+  border-radius: 4px;
+  transition: opacity 0.15s;
+}
+
+#hold-canvas.locked {
+  opacity: 0.35;
+}
+
 #queue-canvas {
   display: block;
   border: 1px solid var(--border);

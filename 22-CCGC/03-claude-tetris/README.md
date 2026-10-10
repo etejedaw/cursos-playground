@@ -64,6 +64,7 @@ Es una versión jugable del Tetris clásico con todas las mecánicas que esperar
 | Invisibles       | Limpiar 10 líneas                                                                      | Las piezas asentadas solo se ven 1 s tras cada bloqueo                |
 | Rotación inversa | Limpiar 10 líneas                                                                      | Empiezas en el nivel 8 y `↑`/`X` giran en sentido antihorario         |
 
+- **Hold (reservar pieza)**: `C` o `Shift` guardan la pieza actual en el panel `HOLD` (arriba a la izquierda) y sacan la siguiente. Si ya había una reservada, se intercambian y la recuperada aparece arriba. Solo se puede usar una vez por pieza: el slot se atenúa hasta que la pieza actual se asiente. Sirve para guardar la `I` esperando un Tetris o para evitar una mala pieza.
 - **Habilidades**: cada línea limpiada carga 12 puntos de la barra de **energía** (panel izquierdo, máximo 100). Con energía suficiente, `E` abre un menú que pausa la partida; elige con `1`–`4` (o con el ratón) y `Esc`/`E` lo cierra sin gastar nada.
 
 | Tecla | Habilidad       | Coste | Efecto                                                                                                   |
@@ -125,6 +126,7 @@ Después abre `http://localhost:8000` en el navegador.
 | `↓`       | Soft drop (bajar más rápido)      |
 | `Espacio` | Hard drop (caída instantánea)     |
 | `P`       | Pausar / reanudar                 |
+| `C` / `Shift` | Reservar pieza (hold)         |
 | `E`       | Abrir el menú de habilidades      |
 | `M`       | Silenciar / activar el sonido     |
 

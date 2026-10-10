@@ -178,6 +178,8 @@ const linesEl = document.getElementById("lines");
 const levelEl = document.getElementById("level");
 const powerUpEl = document.getElementById("power-up-progress");
 const comboEl = document.getElementById("combo");
+const holdCanvas = document.getElementById("hold-canvas");
+const holdCtx = holdCanvas.getContext("2d");
 const energyBar = document.getElementById("energy-bar");
 const energyFill = document.getElementById("energy-fill");
 const energyHint = document.getElementById("energy-hint");
@@ -226,7 +228,9 @@ let board,
 	queue,
 	abilityMenuOpen,
 	slowRemaining,
-	undoSnapshot;
+	undoSnapshot,
+	held,
+	holdUsed;
 
 let modeKey = "classic";
 let muted = false;
@@ -649,11 +653,29 @@ function playTones(frequencies, stepMs) {
 function spawn() {
 	current = next;
 	lastMoveWasRotation = false;
+	holdUsed = false;
 	next = queue.length ? queue.shift() : randomPiece();
 	if (collide(current.shape, current.x, current.y)) {
 		endGame();
 	}
 	drawPreviews();
+}
+
+function holdPiece() {
+	if (holdUsed) return;
+	if (held) {
+		const incoming = freshCopy(held);
+		held = freshCopy(current);
+		current = incoming;
+		lastMoveWasRotation = false;
+		dropAccum = 0;
+		if (collide(current.shape, current.x, current.y)) endGame();
+	} else {
+		held = freshCopy(current);
+		spawn();
+	}
+	holdUsed = true;
+	drawHold();
 }
 
 function revealUpcoming() {
@@ -692,6 +714,7 @@ function undoLastPlacement() {
 	next = current;
 	current = freshCopy(snapshot.piece);
 	lastMoveWasRotation = false;
+	holdUsed = false;
 	undoSnapshot = null;
 	dropAccum = 0;
 	return true;
@@ -903,6 +926,12 @@ function drawStatus() {
 function drawPreviews() {
 	drawNext();
 	drawQueue();
+	drawHold();
+}
+
+function drawHold() {
+	drawPieceCentered(holdCtx, holdCanvas, held);
+	holdCanvas.classList.toggle("locked", holdUsed);
 }
 
 function drawQueue() {
@@ -920,15 +949,20 @@ function drawQueue() {
 	});
 }
 
-function drawNext() {
+function drawPieceCentered(context, targetCanvas, piece) {
 	const NB = 30;
-	nextCtx.clearRect(0, 0, nextCanvas.width, nextCanvas.height);
-	const shape = next.shape;
+	context.clearRect(0, 0, targetCanvas.width, targetCanvas.height);
+	if (!piece) return;
+	const shape = piece.shape;
 	const offX = Math.floor((4 - shape[0].length) / 2);
 	const offY = Math.floor((4 - shape.length) / 2);
 	for (let r = 0; r < shape.length; r++)
 		for (let c = 0; c < shape[r].length; c++)
-			drawBlock(nextCtx, offX + c, offY + r, shape[r][c], NB);
+			drawBlock(context, offX + c, offY + r, shape[r][c], NB);
+}
+
+function drawNext() {
+	drawPieceCentered(nextCtx, nextCanvas, next);
 }
 
 function endGame(title = "GAME OVER", won = false) {
@@ -1012,6 +1046,7 @@ function init() {
 	queue = [];
 	slowRemaining = 0;
 	undoSnapshot = null;
+	held = null;
 	abilityMenuOpen = false;
 	abilityMenu.classList.add("hidden");
 	objectiveTextEl.textContent = challenge.description;
@@ -1041,6 +1076,11 @@ document.addEventListener("keydown", e => {
 	switch (e.code) {
 		case "KeyE":
 			openAbilityMenu();
+			break;
+		case "KeyC":
+		case "ShiftLeft":
+		case "ShiftRight":
+			holdPiece();
 			break;
 		case "ArrowLeft":
 			e.preventDefault();
