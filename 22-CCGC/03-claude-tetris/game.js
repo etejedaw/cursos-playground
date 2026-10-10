@@ -12,7 +12,12 @@ const COLORS = [
 	"#81c784", // S - green
 	"#e57373", // Z - red
 	"#7986cb", // J - indigo
-	"#ffb74d" // L - orange
+	"#ffb74d", // L - orange
+	"#aed581", // + - lime
+	"#4db6ac", // U - teal
+	"#f48fb1", // Y - pink
+	"#90a4ae", // single - blue grey
+	"#a1887f" // hollow - brown
 ];
 
 const PIECES = [
@@ -51,8 +56,36 @@ const PIECES = [
 		[0, 0, 7],
 		[7, 7, 7],
 		[0, 0, 0]
-	] // L
+	], // L
+	[
+		[0, 8, 0],
+		[8, 8, 8],
+		[0, 8, 0]
+	], // +
+	[
+		[9, 0, 9],
+		[9, 9, 9],
+		[0, 0, 0]
+	], // U
+	[
+		[0, 0, 0, 0],
+		[10, 10, 10, 10],
+		[0, 10, 0, 0],
+		[0, 0, 0, 0]
+	], // Y
+	[[11]], // single
+	[
+		[12, 12, 12],
+		[12, 0, 12],
+		[12, 12, 12]
+	] // hollow
 ];
+
+const STANDARD_PIECE_TYPES = [1, 2, 3, 4, 5, 6, 7];
+const EXTRA_PIECE_TYPES = [8, 9, 10, 12];
+const SINGLE_PIECE_TYPE = 11;
+const EXTRA_PIECE_CHANCE = 0.1;
+const TETRIS_LINES = 4;
 
 const LINE_SCORES = [0, 100, 300, 500, 800];
 
@@ -100,6 +133,7 @@ let board,
 	dropInterval,
 	animId,
 	pendingPowerUp,
+	pendingSingle,
 	freezeRemaining,
 	notice;
 
@@ -108,7 +142,7 @@ function createBoard() {
 }
 
 function powerUpPiece() {
-	const kind = POWER_UP_KINDS[Math.floor(Math.random() * POWER_UP_KINDS.length)];
+	const kind = pickRandom(POWER_UP_KINDS);
 	return {
 		type: 0,
 		powerUp: kind,
@@ -118,12 +152,22 @@ function powerUpPiece() {
 	};
 }
 
+function pickRandom(items) {
+	return items[Math.floor(Math.random() * items.length)];
+}
+
+function randomPieceType() {
+	if (Math.random() < EXTRA_PIECE_CHANCE) return pickRandom(EXTRA_PIECE_TYPES);
+	return pickRandom(STANDARD_PIECE_TYPES);
+}
+
 function randomPiece() {
 	if (pendingPowerUp) {
 		pendingPowerUp = false;
 		return powerUpPiece();
 	}
-	const type = Math.floor(Math.random() * 7) + 1;
+	const type = pendingSingle ? SINGLE_PIECE_TYPE : randomPieceType();
+	pendingSingle = false;
 	const shape = PIECES[type].map(row => [...row]);
 	return {
 		type,
@@ -190,6 +234,7 @@ function clearLines() {
 		if (Math.floor(lines / POWER_UP_EVERY_LINES) > powerUpsBefore) {
 			pendingPowerUp = true;
 		}
+		if (cleared === TETRIS_LINES) pendingSingle = true;
 		score += (LINE_SCORES[cleared] || 0) * level;
 		level = Math.floor(lines / 10) + 1;
 		dropInterval = Math.max(100, 1000 - (level - 1) * 90);
@@ -462,6 +507,7 @@ function init() {
 	dropAccum = 0;
 	lastTime = performance.now();
 	pendingPowerUp = false;
+	pendingSingle = false;
 	freezeRemaining = 0;
 	notice = null;
 	next = randomPiece();
