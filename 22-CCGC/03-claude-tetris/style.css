@@ -48,6 +48,11 @@
   --grid-line: #1c1c2e;
 }
 
+:root[data-skin="gameboy"] {
+  --canvas-bg: #9bbc0f;
+  --grid-line: #8bac0f;
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -724,4 +729,23 @@ kbd {
   padding: 6px 8px;
   font-size: 12px;
   font-weight: 600;
+}
+
+.skin-picker {
+  position: fixed;
+  top: 16px;
+  right: 140px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.skin-picker .skin-select {
+  position: static;
+}
+
+.skin-preview {
+  background: var(--canvas-bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
 }
