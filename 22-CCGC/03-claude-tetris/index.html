@@ -62,6 +62,7 @@
               <span class="label">MEJORES PUNTUACIONES</span>
               <ol id="overlay-records-list" class="records-list"></ol>
               <p class="records-stats">Mejor combo <strong id="overlay-best-combo">-</strong> · Líneas máx. <strong id="overlay-max-lines">0</strong></p>
+              <p class="records-stats">Partidas <strong id="overlay-games-played">0</strong> · Tiempo total <strong id="overlay-total-time">0:00</strong></p>
             </div>
             <button id="restart-btn">Reiniciar</button>
           </div>
@@ -137,6 +138,15 @@
           <ol id="records-list" class="records-list"></ol>
           <p class="records-stats">Mejor combo <strong id="records-best-combo">-</strong></p>
           <p class="records-stats">Líneas máx. <strong id="records-max-lines">0</strong></p>
+          <p class="records-stats">Partidas <strong id="records-games-played">0</strong></p>
+          <p class="records-stats">Tiempo total <strong id="records-total-time">0:00</strong></p>
+          <span class="label">HISTORIAL</span>
+          <ol id="history-list" class="records-list history-list"></ol>
+          <div class="records-actions">
+            <button id="records-export-btn" class="records-reset-btn" type="button">Exportar</button>
+            <button id="records-import-btn" class="records-reset-btn" type="button">Importar</button>
+            <input id="records-import-input" type="file" accept="application/json,.json" hidden />
+          </div>
           <button id="records-reset-btn" class="records-reset-btn" type="button">Reiniciar records</button>
         </div>
 
