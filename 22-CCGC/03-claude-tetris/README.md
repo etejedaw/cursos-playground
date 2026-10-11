@@ -74,6 +74,7 @@ Es una versión jugable del Tetris clásico con todas las mecánicas que esperar
 | `3`   | Ralentizar      | 50    | La caída va al 40 % de velocidad durante 10 s                                                            |
 | `4`   | Deshacer        | 60    | Revierte la última colocación (tablero, puntos, líneas, nivel y combo) y te devuelve esa pieza. Solo una vez, y no tras subir basura |
 
+- **Tabla de records**: el panel derecho (`RECORDS`) muestra desde la carga el top 5 de puntuaciones, el mejor combo y las líneas máximas en una partida. Se guardan en `localStorage` (clave `tetris.records`), así que persisten al recargar. Al terminar una partida (derrota o victoria, en cualquier modo) el overlay muestra la tabla; si tu puntuación entra en el top 5 aparece un campo para tu nombre (máximo 12 caracteres, `Enter` o el botón _Guardar_) y tu fila se resalta. Si no escribes nombre se guarda como _Anónimo_, y una puntuación de 0 nunca entra. El botón _Reiniciar records_ (pide confirmación) vacía toda la tabla. Mientras el foco está en el campo de nombre (o en el selector de modo) las teclas del juego no actúan, así que puedes escribir `p` o `m` sin pausar ni silenciar.
 - **Power-ups**: cada 5 líneas la siguiente pieza es un bloque especial de 1×1 (visible en `NEXT`) cuyo efecto se activa al aterrizar. Cada bloque destruido suma 10 puntos.
 
 | Power-up     | Efecto                                                                                              |
@@ -142,7 +143,8 @@ Define la estructura visual:
 
 - Un `<canvas id="board">` de **300 × 600** píxeles donde se renderiza el tablero.
 - Un panel lateral con `SCORE`, `LINES`, `LEVEL`, vista de la siguiente pieza y la lista de controles.
-- Un overlay para los estados **PAUSA** y **GAME OVER**.
+- Un overlay para los estados **PAUSA** y **GAME OVER**; en el segundo incluye la tabla de records y el formulario para el nombre.
+- Un panel `#records` con el top 5, el mejor combo, las líneas máximas y el botón _Reiniciar records_.
 
 ### 2. `style.css`
 
@@ -161,6 +163,7 @@ Contiene toda la lógica del juego. A grandes rasgos:
 - **Puntuación**: usa la tabla clásica `[0, 100, 300, 500, 800]` multiplicada por el nivel actual; el hard drop suma 2 puntos por celda recorrida y el soft drop 1 punto por fila.
 - **Nivel y velocidad**: el nivel sube cada 10 líneas; la velocidad de caída se calcula como `max(100, 1000 − (level − 1) × 90)` milisegundos.
 - **Ghost piece** (`ghostY`): proyecta la posición final de la pieza actual hacia abajo y la dibuja con `globalAlpha = 0.2`.
+- **Records** (`registerFinishedGame`): `endGame` los registra una sola vez por partida. La tabla vive en `localStorage["tetris.records"]` con la forma `{ top: [{ name, score }], bestCombo, maxLines }`; la lectura y la escritura van en `try/catch`, y si el JSON está corrupto o `localStorage` falla se arranca con una tabla vacía. El combo máximo de la partida se sigue en `maxCombo` (actualizado en `clearLines`).
 
 ### Flujo del juego
 
