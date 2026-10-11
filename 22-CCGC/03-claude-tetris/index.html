@@ -88,7 +88,19 @@
               <select id="pause-start-level"></select>
             </label>
             <p class="pause-hint">El nivel inicial se aplica al reiniciar</p>
+            <div class="pause-field">
+              <span id="pause-sound-label">Sonido</span>
+              <button id="pause-sound-toggle" class="switch" type="button" role="switch" aria-checked="true" aria-labelledby="pause-sound-label"></button>
+            </div>
+            <div class="pause-field">
+              <span id="pause-ghost-label">Sombra de pieza</span>
+              <button id="pause-ghost-toggle" class="switch" type="button" role="switch" aria-checked="true" aria-labelledby="pause-ghost-label"></button>
+            </div>
           </div>
+        </div>
+
+        <div id="resume-countdown" class="overlay hidden" aria-live="assertive">
+          <p id="resume-countdown-number"></p>
         </div>
 
         <div id="ability-menu" class="overlay hidden">

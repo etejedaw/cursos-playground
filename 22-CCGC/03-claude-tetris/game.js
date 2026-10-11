@@ -204,6 +204,10 @@ const pauseStartLevel = document.getElementById("pause-start-level");
 const themeToggle = document.getElementById("theme-toggle");
 const themeToggleLabel = document.getElementById("theme-toggle-label");
 const skinSelect = document.getElementById("skin-select");
+const pauseSoundToggle = document.getElementById("pause-sound-toggle");
+const pauseGhostToggle = document.getElementById("pause-ghost-toggle");
+const resumeCountdown = document.getElementById("resume-countdown");
+const resumeCountdownNumber = document.getElementById("resume-countdown-number");
 
 let gridColor;
 
@@ -1047,10 +1051,11 @@ function draw() {
 
 	// ghost
 	const gy = ghostY();
-	for (let r = 0; r < current.shape.length; r++)
-		for (let c = 0; c < current.shape[r].length; c++)
-			if (current.shape[r][c])
-				drawBlock(ctx, current.x + c, gy + r, current.shape[r][c], BLOCK, 0.2);
+	if (ghostVisible)
+		for (let r = 0; r < current.shape.length; r++)
+			for (let c = 0; c < current.shape[r].length; c++)
+				if (current.shape[r][c])
+					drawBlock(ctx, current.x + c, gy + r, current.shape[r][c], BLOCK, 0.2);
 
 	// current piece
 	for (let r = 0; r < current.shape.length; r++)
@@ -1336,6 +1341,7 @@ function openPauseMenu() {
 	cancelAnimationFrame(animId);
 	setPauseControlsVisible(false);
 	pauseStartLevel.value = String(chosenStartLevel);
+	renderPauseSwitches();
 	pauseMenu.classList.remove("hidden");
 	pauseResumeBtn.focus();
 }
@@ -1347,11 +1353,96 @@ function closePauseMenu() {
 	loop(lastTime);
 }
 
+const MUTED_STORAGE_KEY = "tetris.muted";
+const GHOST_STORAGE_KEY = "tetris.ghost";
+const RESUME_COUNTDOWN_SECONDS = 3;
+const RESUME_COUNTDOWN_STEP_MS = 1000;
+
+function loadStoredFlag(storageKey, fallback) {
+	try {
+		const stored = localStorage.getItem(storageKey);
+		return stored === null ? fallback : stored === "true";
+	} catch {
+		return fallback;
+	}
+}
+
+function saveStoredFlag(storageKey, value) {
+	try {
+		localStorage.setItem(storageKey, String(value));
+	} catch {}
+}
+
+let ghostVisible = loadStoredFlag(GHOST_STORAGE_KEY, true);
+let countdownRemaining = 0;
+let countdownAnimId;
+let countdownLastTime;
+
+muted = loadStoredFlag(MUTED_STORAGE_KEY, false);
+
+function renderPauseSwitches() {
+	pauseSoundToggle.setAttribute("aria-checked", String(!muted));
+	pauseGhostToggle.setAttribute("aria-checked", String(ghostVisible));
+}
+
+function toggleMuted() {
+	muted = !muted;
+	saveStoredFlag(MUTED_STORAGE_KEY, muted);
+	renderPauseSwitches();
+}
+
+function toggleGhostVisible() {
+	ghostVisible = !ghostVisible;
+	saveStoredFlag(GHOST_STORAGE_KEY, ghostVisible);
+	renderPauseSwitches();
+	draw();
+}
+
+function isResumeCountdownActive() {
+	return countdownRemaining > 0;
+}
+
+function stopResumeCountdown() {
+	cancelAnimationFrame(countdownAnimId);
+	countdownRemaining = 0;
+	resumeCountdown.classList.add("hidden");
+}
+
+function resumeCountdownTick(ts) {
+	countdownRemaining -= ts - countdownLastTime;
+	countdownLastTime = ts;
+	if (countdownRemaining <= 0) {
+		stopResumeCountdown();
+		paused = false;
+		closePauseMenu();
+		return;
+	}
+	resumeCountdownNumber.textContent = String(
+		Math.ceil(countdownRemaining / RESUME_COUNTDOWN_STEP_MS)
+	);
+	countdownAnimId = requestAnimationFrame(resumeCountdownTick);
+}
+
+function startResumeCountdown() {
+	pauseMenu.classList.add("hidden");
+	document.activeElement?.blur();
+	countdownRemaining = RESUME_COUNTDOWN_SECONDS * RESUME_COUNTDOWN_STEP_MS;
+	countdownLastTime = performance.now();
+	resumeCountdown.classList.remove("hidden");
+	resumeCountdownTick(countdownLastTime);
+}
+
 function togglePause() {
 	if (gameOver || abilityMenuOpen) return;
-	paused = !paused;
-	if (paused) openPauseMenu();
-	else closePauseMenu();
+	if (!paused) {
+		paused = true;
+		openPauseMenu();
+	} else if (isResumeCountdownActive()) {
+		stopResumeCountdown();
+		openPauseMenu();
+	} else {
+		startResumeCountdown();
+	}
 }
 
 function handlePauseMenuKey(e) {
@@ -1362,7 +1453,7 @@ function handlePauseMenuKey(e) {
 	}
 	if (isFormField(e.target)) return;
 	if (ARROW_CODES.includes(e.code)) e.preventDefault();
-	if (e.code === "KeyM") muted = !muted;
+	if (e.code === "KeyM") toggleMuted();
 }
 
 for (let startLevel = 1; startLevel <= MAX_START_LEVEL; startLevel++) {
@@ -1376,6 +1467,8 @@ pauseStartLevel.addEventListener("change", () => {
 	chosenStartLevel = Number(pauseStartLevel.value);
 });
 
+pauseSoundToggle.addEventListener("click", toggleMuted);
+pauseGhostToggle.addEventListener("click", toggleGhostVisible);
 pauseResumeBtn.addEventListener("click", togglePause);
 pauseRestartBtn.addEventListener("click", init);
 pauseControlsBtn.addEventListener("click", () => {
@@ -1420,6 +1513,7 @@ function init() {
 	score = 0;
 	lines = 0;
 	level = baseLevel();
+	stopResumeCountdown();
 	paused = false;
 	gameOver = false;
 	dropInterval = dropIntervalFor(level);
@@ -1471,7 +1565,7 @@ document.addEventListener("keydown", e => {
 		return;
 	}
 	if (e.code === "KeyM") {
-		muted = !muted;
+		toggleMuted();
 		return;
 	}
 	if (paused || gameOver) return;
