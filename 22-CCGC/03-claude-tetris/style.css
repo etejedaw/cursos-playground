@@ -506,6 +506,28 @@ body {
   border-color: var(--danger);
 }
 
+.history-list li {
+  font-size: 11px;
+}
+
+.history-date {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.history-score,
+.history-detail {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.records-actions {
+  display: flex;
+  gap: 6px;
+}
+
 .overlay-records {
   width: 230px;
   display: flex;

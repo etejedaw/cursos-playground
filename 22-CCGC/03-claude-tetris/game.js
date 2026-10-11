@@ -1143,6 +1143,8 @@ function drawNext() {
 const RECORDS_STORAGE_KEY = "tetris.records";
 const MAX_TOP_ENTRIES = 5;
 const MAX_NAME_LENGTH = 12;
+const MAX_HISTORY_ENTRIES = 10;
+const EXPORT_FILE_NAME = "tetris-records.json";
 const DEFAULT_PLAYER_NAME = "Anónimo";
 
 const recordsListEl = document.getElementById("records-list");
@@ -1153,6 +1155,14 @@ const overlayRecords = document.getElementById("overlay-records");
 const overlayRecordsList = document.getElementById("overlay-records-list");
 const overlayBestComboEl = document.getElementById("overlay-best-combo");
 const overlayMaxLinesEl = document.getElementById("overlay-max-lines");
+const historyListEl = document.getElementById("history-list");
+const recordsGamesPlayedEl = document.getElementById("records-games-played");
+const recordsTotalTimeEl = document.getElementById("records-total-time");
+const overlayGamesPlayedEl = document.getElementById("overlay-games-played");
+const overlayTotalTimeEl = document.getElementById("overlay-total-time");
+const recordsExportBtn = document.getElementById("records-export-btn");
+const recordsImportBtn = document.getElementById("records-import-btn");
+const recordsImportInput = document.getElementById("records-import-input");
 const nameForm = document.getElementById("name-form");
 const nameInput = document.getElementById("name-input");
 
@@ -1161,7 +1171,7 @@ let pendingEntry = null;
 let highlightedEntry = null;
 
 function emptyRecords() {
-	return { top: [], bestCombo: 0, maxLines: 0 };
+	return { top: [], bestCombo: 0, maxLines: 0, history: [], gamesPlayed: 0, totalSeconds: 0 };
 }
 
 function toCount(value) {
@@ -1184,14 +1194,41 @@ function sanitizeTop(entries) {
 		.slice(0, MAX_TOP_ENTRIES);
 }
 
+function isValidHistoryEntry(entry) {
+	return Boolean(entry)
+		&& Number.isFinite(entry.date)
+		&& Number.isFinite(entry.score)
+		&& Number.isFinite(entry.lines)
+		&& Number.isFinite(entry.level);
+}
+
+function sanitizeHistory(entries) {
+	return entries
+		.filter(isValidHistoryEntry)
+		.map(({ date, score, lines, level }) => ({
+			date,
+			score: toCount(score),
+			lines: toCount(lines),
+			level: toCount(level)
+		}))
+		.slice(0, MAX_HISTORY_ENTRIES);
+}
+
+function sanitizeRecords(stored) {
+	if (!stored || typeof stored !== "object" || Array.isArray(stored)) return emptyRecords();
+	return {
+		top: Array.isArray(stored.top) ? sanitizeTop(stored.top) : [],
+		bestCombo: toCount(stored.bestCombo),
+		maxLines: toCount(stored.maxLines),
+		history: Array.isArray(stored.history) ? sanitizeHistory(stored.history) : [],
+		gamesPlayed: toCount(stored.gamesPlayed),
+		totalSeconds: toCount(stored.totalSeconds)
+	};
+}
+
 function loadRecords() {
 	try {
-		const stored = JSON.parse(localStorage.getItem(RECORDS_STORAGE_KEY)) ?? {};
-		return {
-			top: Array.isArray(stored.top) ? sanitizeTop(stored.top) : [],
-			bestCombo: toCount(stored.bestCombo),
-			maxLines: toCount(stored.maxLines)
-		};
+		return sanitizeRecords(JSON.parse(localStorage.getItem(RECORDS_STORAGE_KEY)));
 	} catch {
 		return emptyRecords();
 	}
@@ -1232,7 +1269,101 @@ function createEmptyRecordItem() {
 	return item;
 }
 
+function formatHistoryDate(timestamp) {
+	const date = new Date(timestamp);
+	const day = date.toLocaleDateString("es-ES", { day: "2-digit", month: "2-digit" });
+	const time = date.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
+	return `${day} ${time}`;
+}
+
+function createHistoryItem(entry) {
+	const item = document.createElement("li");
+	const date = document.createElement("span");
+	date.className = "history-date";
+	date.textContent = formatHistoryDate(entry.date);
+	const points = document.createElement("span");
+	points.className = "history-score";
+	points.textContent = entry.score.toLocaleString();
+	const detail = document.createElement("span");
+	detail.className = "history-detail";
+	detail.textContent = `${entry.lines}L N${entry.level}`;
+	item.append(date, points, detail);
+	return item;
+}
+
+function createEmptyHistoryItem() {
+	const item = document.createElement("li");
+	item.className = "record-empty";
+	item.textContent = "Aún no hay partidas";
+	return item;
+}
+
+function formatPlayTime(totalSeconds) {
+	const hours = Math.floor(totalSeconds / 3600);
+	const minutes = Math.floor((totalSeconds % 3600) / 60);
+	if (hours > 0) return `${hours}h ${String(minutes).padStart(2, "0")}m`;
+	return formatClock(totalSeconds);
+}
+
+function renderHistoryAndStats() {
+	const items = records.history.length
+		? records.history.map(createHistoryItem)
+		: [createEmptyHistoryItem()];
+	historyListEl.replaceChildren(...items);
+	const playTime = formatPlayTime(records.totalSeconds);
+	recordsGamesPlayedEl.textContent = records.gamesPlayed;
+	overlayGamesPlayedEl.textContent = records.gamesPlayed;
+	recordsTotalTimeEl.textContent = playTime;
+	overlayTotalTimeEl.textContent = playTime;
+}
+
+function recordGameStats() {
+	records.history.unshift({ date: Date.now(), score, lines, level });
+	records.history.splice(MAX_HISTORY_ENTRIES);
+	records.gamesPlayed++;
+	records.totalSeconds += Math.floor(elapsed / 1000);
+}
+
+function exportRecords() {
+	const blob = new Blob([JSON.stringify(records, null, 2)], { type: "application/json" });
+	const url = URL.createObjectURL(blob);
+	const link = document.createElement("a");
+	link.href = url;
+	link.download = EXPORT_FILE_NAME;
+	document.body.append(link);
+	link.click();
+	link.remove();
+	URL.revokeObjectURL(url);
+}
+
+function importRecordsFromText(text) {
+	let parsed;
+	try {
+		parsed = JSON.parse(text);
+	} catch {
+		alert("El archivo no es un JSON válido.");
+		return;
+	}
+	if (!hasRecordsShape(parsed)) {
+		alert("El archivo no contiene records válidos.");
+		return;
+	}
+	const imported = sanitizeRecords(parsed);
+	records = imported;
+	pendingEntry = null;
+	highlightedEntry = null;
+	nameForm.classList.add("hidden");
+	saveRecords();
+	renderRecords();
+}
+
+function hasRecordsShape(parsed) {
+	if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return false;
+	return Object.keys(emptyRecords()).some(key => key in parsed);
+}
+
 function renderRecords() {
+	renderHistoryAndStats();
 	const items = records.top.length
 		? records.top.map(createRecordItem)
 		: [createEmptyRecordItem()];
@@ -1258,6 +1389,7 @@ function resetRecordsView() {
 function registerFinishedGame() {
 	records.bestCombo = Math.max(records.bestCombo, maxCombo);
 	records.maxLines = Math.max(records.maxLines, lines);
+	recordGameStats();
 	if (qualifiesForTop(score)) {
 		pendingEntry = { name: DEFAULT_PLAYER_NAME, score };
 		highlightedEntry = pendingEntry;
@@ -1298,6 +1430,24 @@ function clearAllRecords() {
 nameForm.addEventListener("submit", e => {
 	e.preventDefault();
 	savePendingName();
+});
+
+recordsExportBtn.addEventListener("click", () => {
+	exportRecords();
+	recordsExportBtn.blur();
+});
+
+recordsImportBtn.addEventListener("click", () => {
+	recordsImportInput.click();
+	recordsImportBtn.blur();
+});
+
+recordsImportInput.addEventListener("change", async () => {
+	const file = recordsImportInput.files[0];
+	recordsImportInput.value = "";
+	if (!file) return;
+	importRecordsFromText(await file.text());
+	lastTime = performance.now();
 });
 
 recordsResetBtn.addEventListener("click", () => {
