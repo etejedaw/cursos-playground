@@ -896,6 +896,22 @@ function drawPixelCell(context, px, py, size, color) {
 	}
 }
 
+const GAMEBOY_TONES = ["#0f380f", "#306230", "#8bac0f", "#9bbc0f"];
+
+function drawGameboyCell(context, px, py, size, color) {
+	const [darkest, dark, light] = GAMEBOY_TONES;
+	context.fillStyle = darkest;
+	context.fillRect(px, py, size, size);
+	context.fillStyle = color;
+	context.fillRect(px + 1, py + 1, size - 2, size - 2);
+	context.fillStyle = light;
+	context.fillRect(px + 1, py + 1, size - 2, 1);
+	context.fillRect(px + 1, py + 1, 1, size - 2);
+	context.fillStyle = dark;
+	context.fillRect(px + 1, py + size - 2, size - 2, 1);
+	context.fillRect(px + size - 2, py + 1, 1, size - 2);
+}
+
 const SKINS = {
 	retro: { label: "Retro", colors: COLORS, drawCell: drawRetroCell },
 	neon: {
@@ -1474,6 +1490,10 @@ document.addEventListener("keydown", e => {
 		muted = !muted;
 		return;
 	}
+	if (e.code === "KeyT") {
+		cycleSkin();
+		return;
+	}
 	if (paused || gameOver) return;
 	switch (e.code) {
 		case "KeyE":
@@ -1538,11 +1558,50 @@ function readGridColor() {
 		.trim();
 }
 
+const skinPreviewCanvas = document.getElementById("skin-preview");
+const skinPreviewCtx = skinPreviewCanvas.getContext("2d");
+const SKIN_PREVIEW_BLOCK = 5;
+const SKIN_PREVIEW_SLOT_CELLS = 5;
+const SKIN_PREVIEW_ROWS = 4;
+
+function trimmedShape(shape) {
+	const rows = shape.filter(row => row.some(Boolean));
+	const columns = shape[0]
+		.map((_, col) => col)
+		.filter(col => shape.some(row => row[col]));
+	return rows.map(row => columns.map(col => row[col]));
+}
+
+function drawSkinPreview() {
+	skinPreviewCtx.clearRect(0, 0, skinPreviewCanvas.width, skinPreviewCanvas.height);
+	STANDARD_PIECE_TYPES.forEach((type, index) => {
+		const shape = trimmedShape(PIECES[type]);
+		const offsetX = index * SKIN_PREVIEW_SLOT_CELLS;
+		const offsetY = Math.floor((SKIN_PREVIEW_ROWS - shape.length) / 2);
+		shape.forEach((row, y) => {
+			row.forEach((cell, x) => {
+				if (cell) drawBlock(skinPreviewCtx, offsetX + x, offsetY + y, type, SKIN_PREVIEW_BLOCK);
+			});
+		});
+	});
+}
+
 function applySkin(skinKey) {
 	activeSkin = SKINS[skinKey];
 	document.documentElement.dataset.skin = skinKey;
 	skinSelect.value = skinKey;
 	readGridColor();
+	drawSkinPreview();
+}
+
+function cycleSkin() {
+	const skinKeys = Object.keys(SKINS);
+	const currentIndex = skinKeys.indexOf(skinSelect.value);
+	const nextKey = skinKeys[(currentIndex + 1) % skinKeys.length];
+	applySkin(nextKey);
+	saveSkinKey(nextKey);
+	draw();
+	drawPreviews();
 }
 
 for (const [key, { label }] of Object.entries(SKINS)) {
