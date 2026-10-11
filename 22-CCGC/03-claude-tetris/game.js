@@ -195,6 +195,12 @@ const overlay = document.getElementById("overlay");
 const overlayTitle = document.getElementById("overlay-title");
 const overlayScore = document.getElementById("overlay-score");
 const restartBtn = document.getElementById("restart-btn");
+const pauseMenu = document.getElementById("pause-menu");
+const pauseResumeBtn = document.getElementById("pause-resume-btn");
+const pauseRestartBtn = document.getElementById("pause-restart-btn");
+const pauseControlsBtn = document.getElementById("pause-controls-btn");
+const pauseControlsList = document.getElementById("pause-controls-list");
+const pauseStartLevel = document.getElementById("pause-start-level");
 const themeToggle = document.getElementById("theme-toggle");
 const themeToggleLabel = document.getElementById("theme-toggle-label");
 
@@ -230,9 +236,11 @@ let board,
 	slowRemaining,
 	undoSnapshot,
 	held,
-	holdUsed;
+	holdUsed,
+	activeStartLevel;
 
 let modeKey = "classic";
+let chosenStartLevel = 1;
 let muted = false;
 let audioContext;
 
@@ -373,7 +381,7 @@ function isBoardEmpty() {
 }
 
 function baseLevel() {
-	return challenge.startLevel ?? 1;
+	return challenge.startLevel ?? activeStartLevel;
 }
 
 function dropIntervalFor(forLevel) {
@@ -976,19 +984,70 @@ function endGame(title = "GAME OVER", won = false) {
 	overlay.classList.remove("hidden");
 }
 
-function togglePause() {
-	if (gameOver) return;
-	paused = !paused;
-	if (!paused) {
-		lastTime = performance.now();
-		loop(lastTime);
-	} else {
-		cancelAnimationFrame(animId);
-		overlayTitle.textContent = "PAUSA";
-		overlayScore.textContent = "";
-		overlay.classList.remove("hidden");
-	}
+const MAX_START_LEVEL = 10;
+const FORM_FIELD_TAGS = ["INPUT", "SELECT", "TEXTAREA"];
+const PAUSE_TOGGLE_CODES = ["Escape", "KeyP"];
+const ARROW_CODES = ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"];
+
+function isFormField(element) {
+	return FORM_FIELD_TAGS.includes(element?.tagName);
 }
+
+function setPauseControlsVisible(visible) {
+	pauseControlsList.classList.toggle("hidden", !visible);
+	pauseControlsBtn.setAttribute("aria-expanded", String(visible));
+	pauseControlsBtn.textContent = visible ? "Ocultar controles" : "Ver controles";
+}
+
+function openPauseMenu() {
+	cancelAnimationFrame(animId);
+	setPauseControlsVisible(false);
+	pauseStartLevel.value = String(chosenStartLevel);
+	pauseMenu.classList.remove("hidden");
+	pauseResumeBtn.focus();
+}
+
+function closePauseMenu() {
+	pauseMenu.classList.add("hidden");
+	document.activeElement?.blur();
+	lastTime = performance.now();
+	loop(lastTime);
+}
+
+function togglePause() {
+	if (gameOver || abilityMenuOpen) return;
+	paused = !paused;
+	if (paused) openPauseMenu();
+	else closePauseMenu();
+}
+
+function handlePauseMenuKey(e) {
+	if (PAUSE_TOGGLE_CODES.includes(e.code)) {
+		e.preventDefault();
+		togglePause();
+		return;
+	}
+	if (isFormField(e.target)) return;
+	if (ARROW_CODES.includes(e.code)) e.preventDefault();
+	if (e.code === "KeyM") muted = !muted;
+}
+
+for (let startLevel = 1; startLevel <= MAX_START_LEVEL; startLevel++) {
+	const option = document.createElement("option");
+	option.value = String(startLevel);
+	option.textContent = String(startLevel);
+	pauseStartLevel.append(option);
+}
+
+pauseStartLevel.addEventListener("change", () => {
+	chosenStartLevel = Number(pauseStartLevel.value);
+});
+
+pauseResumeBtn.addEventListener("click", togglePause);
+pauseRestartBtn.addEventListener("click", init);
+pauseControlsBtn.addEventListener("click", () => {
+	setPauseControlsVisible(pauseControlsList.classList.contains("hidden"));
+});
 
 function tickTimers(dt) {
 	freezeRemaining = Math.max(0, freezeRemaining - dt);
@@ -1022,6 +1081,7 @@ function loop(ts) {
 
 function init() {
 	challenge = CHALLENGES[modeKey];
+	activeStartLevel = chosenStartLevel;
 	board = createBoard();
 	if (challenge.prefilledRows) prefillBoard(challenge.prefilledRows);
 	score = 0;
@@ -1049,6 +1109,7 @@ function init() {
 	held = null;
 	abilityMenuOpen = false;
 	abilityMenu.classList.add("hidden");
+	pauseMenu.classList.add("hidden");
 	objectiveTextEl.textContent = challenge.description;
 	overlayTitle.classList.remove("victory");
 	next = randomPiece();
@@ -1064,7 +1125,12 @@ document.addEventListener("keydown", e => {
 		handleAbilityMenuKey(e);
 		return;
 	}
-	if (e.code === "KeyP") {
+	if (paused) {
+		handlePauseMenuKey(e);
+		return;
+	}
+	if (PAUSE_TOGGLE_CODES.includes(e.code)) {
+		e.preventDefault();
 		togglePause();
 		return;
 	}
