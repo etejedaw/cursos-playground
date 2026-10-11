@@ -18,6 +18,7 @@
   --danger: #e57373;
   --success: #81c784;
   --grid-line: #22222e;
+  --canvas-bg: var(--board-bg);
 }
 
 :root[data-theme="light"] {
@@ -40,6 +41,11 @@
   --danger: #d32f2f;
   --success: #2e7d32;
   --grid-line: #e3e5ee;
+}
+
+:root[data-skin="neon"] {
+  --canvas-bg: #000000;
+  --grid-line: #1c1c2e;
 }
 
 *, *::before, *::after {
@@ -120,7 +126,7 @@ body {
 #board {
   display: block;
   border: 1px solid var(--border);
-  background: var(--board-bg);
+  background: var(--canvas-bg);
   border-radius: 4px;
   box-shadow: 0 0 40px var(--board-shadow);
 }
@@ -179,14 +185,14 @@ body {
 #next-canvas {
   display: block;
   border: 1px solid var(--border);
-  background: var(--board-bg);
+  background: var(--canvas-bg);
   border-radius: 4px;
 }
 
 #hold-canvas {
   display: block;
   border: 1px solid var(--border);
-  background: var(--board-bg);
+  background: var(--canvas-bg);
   border-radius: 4px;
   transition: opacity 0.15s;
 }
@@ -198,7 +204,7 @@ body {
 #queue-canvas {
   display: block;
   border: 1px solid var(--border);
-  background: var(--board-bg);
+  background: var(--canvas-bg);
   border-radius: 4px;
 }
 
@@ -423,4 +429,17 @@ kbd {
 
 .theme-toggle[aria-checked="true"] .theme-toggle-thumb {
   transform: translateX(16px);
+}
+
+.skin-select {
+  position: fixed;
+  top: 16px;
+  right: 140px;
+  background: var(--board-bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-size: 12px;
+  font-weight: 600;
 }
