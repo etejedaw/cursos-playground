@@ -38,13 +38,13 @@ Es una versión jugable del Tetris clásico con todas las mecánicas que esperar
 - **Piezas especiales**: con un 10 % de probabilidad por pieza aparece una pieza no estándar (`+`, `U`, `Y` de 5 bloques o un cuadrado 3×3 hueco de 8 bloques). Tras un **Tetris** (4 líneas a la vez) la siguiente pieza es un bloque suelto de 1×1 como recompensa.
 - **Rotación** con _wall kicks_ básicos (pequeños desplazamientos para que la pieza pueda rotar pegada a la pared).
 - **Soft drop** (bajada acelerada) y **hard drop** (caída instantánea).
-- **Pieza fantasma** (_ghost piece_): muestra dónde aterrizará la pieza actual.
+- **Pieza fantasma** (_ghost piece_): muestra dónde aterrizará la pieza actual. Se puede ocultar desde el menú de pausa.
 - **Vista previa** de la siguiente pieza.
 - **Sistema de puntuación** clásico de Tetris (100 / 300 / 500 / 800 multiplicado por nivel) con combos, T-spin, Back-to-Back y Perfect Clear (ver abajo).
 - **Niveles** que aumentan cada 10 líneas y aceleran la caída.
-- **Menú de pausa** (`P` o `Esc`) con Reanudar, Reiniciar, lista de controles y selector de **nivel inicial** (1–10, se aplica a la próxima partida; los retos con nivel propio lo mantienen), y **Game Over** con opción de reinicio.
+- **Menú de pausa** (`P` o `Esc`) con Reanudar, Reiniciar, lista de controles, selector de **nivel inicial** (1–10, se aplica a la próxima partida; los retos con nivel propio lo mantienen) e interruptores de **Sonido** y **Sombra de pieza** (se guardan en `localStorage`, claves `tetris.muted` y `tetris.ghost`). Al reanudar hay una **cuenta atrás 3-2-1** sobre el tablero durante la cual el juego sigue bloqueado; si pausas de nuevo durante la cuenta, se cancela y vuelves al menú. Al terminar la partida aparece **Game Over** con opción de reinicio.
 - **Tema oscuro / claro**: arranca en oscuro y se cambia con el interruptor de la esquina superior derecha.
-- **Skins visuales**: el selector de la esquina superior derecha, junto al interruptor de tema, cambia la apariencia de los bloques sin recargar. **Retro** (bloques cuadrados de colores planos, la de siempre), **Neón** (fondo negro y brillo con `shadowBlur`), **Pastel** (colores suaves y bordes redondeados) y **Pixel art** (textura de sub-píxeles claros y oscuros sobre cada bloque). La elección se guarda en `localStorage` (clave `tetris.skin`) y convive con el tema claro / oscuro (Neón fuerza el fondo del tablero a negro).
+- **Skins visuales**: el selector de la esquina superior derecha, junto al interruptor de tema, cambia la apariencia de los bloques sin recargar. **Retro** (bloques cuadrados de colores planos, la de siempre), **Neón** (fondo negro y brillo con `shadowBlur`), **Pastel** (colores suaves y bordes redondeados) y **Pixel art** (textura de sub-píxeles claros y oscuros sobre cada bloque) y **Gameboy** (cuatro tonos de verde con relieve simple). Junto al selector hay una **previsualización** con las 7 piezas en la skin elegida, y la tecla `T` pasa a la siguiente skin. La elección se guarda en `localStorage` (clave `tetris.skin`) y convive con el tema claro / oscuro (Neón fuerza el fondo del tablero a negro).
 - **Combos y bonus**: cada línea limpiada suma puntos extra según cómo la consigas. Al encadenar se muestra un aviso sobre el tablero, un destello y una nota que sube de tono con el combo.
 
 | Bonus           | Cómo se consigue                                                                                       | Efecto                                                              |
@@ -75,7 +75,7 @@ Es una versión jugable del Tetris clásico con todas las mecánicas que esperar
 | `3`   | Ralentizar      | 50    | La caída va al 40 % de velocidad durante 10 s                                                            |
 | `4`   | Deshacer        | 60    | Revierte la última colocación (tablero, puntos, líneas, nivel y combo) y te devuelve esa pieza. Solo una vez, y no tras subir basura |
 
-- **Tabla de records**: el panel derecho (`RECORDS`) muestra desde la carga el top 5 de puntuaciones, el mejor combo y las líneas máximas en una partida. Se guardan en `localStorage` (clave `tetris.records`), así que persisten al recargar. Al terminar una partida (derrota o victoria, en cualquier modo) el overlay muestra la tabla; si tu puntuación entra en el top 5 aparece un campo para tu nombre (máximo 12 caracteres, `Enter` o el botón _Guardar_) y tu fila se resalta. Si no escribes nombre se guarda como _Anónimo_, y una puntuación de 0 nunca entra. El botón _Reiniciar records_ (pide confirmación) vacía toda la tabla. Mientras el foco está en el campo de nombre (o en el selector de modo) las teclas del juego no actúan, así que puedes escribir `p` o `m` sin pausar ni silenciar.
+- **Tabla de records**: el panel derecho (`RECORDS`) muestra desde la carga el top 5 de puntuaciones, el mejor combo, las líneas máximas en una partida, el número de partidas jugadas, el tiempo total jugado y el **historial** de las últimas 10 partidas (fecha, puntuación, líneas y nivel). Se guardan en `localStorage` (clave `tetris.records`), así que persisten al recargar. Al terminar una partida (derrota o victoria, en cualquier modo) el overlay muestra la tabla; si tu puntuación entra en el top 5 aparece un campo para tu nombre (máximo 12 caracteres, `Enter` o el botón _Guardar_) y tu fila se resalta. Si no escribes nombre se guarda como _Anónimo_, y una puntuación de 0 nunca entra. El botón _Reiniciar records_ (pide confirmación) vacía la tabla, el historial y los contadores. _Exportar_ descarga todo como `tetris-records.json` e _Importar_ carga un archivo así, validándolo y descartando lo inválido; importar **reemplaza** los records actuales en lugar de fusionarlos. Solo cuentan las partidas terminadas (derrota o victoria), no las que abandonas con Reiniciar. Mientras el foco está en el campo de nombre (o en el selector de modo) las teclas del juego no actúan, así que puedes escribir `p` o `m` sin pausar ni silenciar.
 - **Power-ups**: cada 5 líneas la siguiente pieza es un bloque especial de 1×1 (visible en `NEXT`) cuyo efecto se activa al aterrizar. Cada bloque destruido suma 10 puntos.
 
 | Power-up     | Efecto                                                                                              |
@@ -131,6 +131,7 @@ Después abre `http://localhost:8000` en el navegador.
 | `C` / `Shift` | Reservar pieza (hold)         |
 | `E`       | Abrir el menú de habilidades      |
 | `M`       | Silenciar / activar el sonido     |
+| `T`       | Cambiar a la siguiente skin       |
 
 ---
 
@@ -144,8 +145,9 @@ Define la estructura visual:
 
 - Un `<canvas id="board">` de **300 × 600** píxeles donde se renderiza el tablero.
 - Un panel lateral con `SCORE`, `LINES`, `LEVEL`, vista de la siguiente pieza y la lista de controles.
-- Un menú de pausa (`#pause-menu`) y un overlay para el estado **GAME OVER**; el overlay incluye la tabla de records y el formulario para el nombre.
-- Un panel `#records` con el top 5, el mejor combo, las líneas máximas y el botón _Reiniciar records_.
+- Un menú de pausa (`#pause-menu`, con interruptores de sonido y sombra de pieza), una cuenta atrás de reanudación (`#resume-countdown`) y un overlay para el estado **GAME OVER**; el overlay incluye la tabla de records y el formulario para el nombre.
+- Un panel `#records` con el top 5, el mejor combo, las líneas máximas, el historial de partidas y los botones _Reiniciar records_, _Exportar_ e _Importar_.
+- Un mini canvas `#skin-preview` junto al selector de skin.
 
 ### 2. `style.css`
 
@@ -164,7 +166,7 @@ Contiene toda la lógica del juego. A grandes rasgos:
 - **Puntuación**: usa la tabla clásica `[0, 100, 300, 500, 800]` multiplicada por el nivel actual; el hard drop suma 2 puntos por celda recorrida y el soft drop 1 punto por fila.
 - **Nivel y velocidad**: el nivel sube cada 10 líneas; la velocidad de caída se calcula como `max(100, 1000 − (level − 1) × 90)` milisegundos.
 - **Ghost piece** (`ghostY`): proyecta la posición final de la pieza actual hacia abajo y la dibuja con `globalAlpha = 0.2`.
-- **Records** (`registerFinishedGame`): `endGame` los registra una sola vez por partida. La tabla vive en `localStorage["tetris.records"]` con la forma `{ top: [{ name, score }], bestCombo, maxLines }`; la lectura y la escritura van en `try/catch`, y si el JSON está corrupto o `localStorage` falla se arranca con una tabla vacía. El combo máximo de la partida se sigue en `maxCombo` (actualizado en `clearLines`).
+- **Records** (`registerFinishedGame`): `endGame` los registra una sola vez por partida. La tabla vive en `localStorage["tetris.records"]` con la forma `{ top: [{ name, score }], bestCombo, maxLines, history: [{ date, score, lines, level }], gamesPlayed, totalSeconds }`, y todo lo que se lee o se importa pasa por `sanitizeRecords`; la lectura y la escritura van en `try/catch`, y si el JSON está corrupto o `localStorage` falla se arranca con una tabla vacía. El combo máximo de la partida se sigue en `maxCombo` (actualizado en `clearLines`).
 
 ### Flujo del juego
 
@@ -222,7 +224,7 @@ Algunos parámetros fáciles de tunear en `game.js`:
 | `ROWS`         | Filas del tablero                        | `20`                  |
 | `BLOCK`        | Tamaño en píxeles de cada celda          | `30`                  |
 | `COLORS`       | Paleta de la skin Retro por tipo de pieza | 14 entradas           |
-| `SKINS`        | Skins: `label`, `colors` (14 entradas) y `drawCell` | `retro`, `neon`, `pastel`, `pixel` |
+| `SKINS`        | Skins: `label`, `colors` (14 entradas) y `drawCell` | `retro`, `neon`, `pastel`, `pixel`, `gameboy` |
 | `LINE_SCORES`  | Puntos por 1, 2, 3 o 4 líneas eliminadas | `[0,100,300,500,800]` |
 | `dropInterval` | Velocidad inicial de caída en ms         | `1000`                |
 
