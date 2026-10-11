@@ -386,6 +386,145 @@ body {
   color: var(--muted);
 }
 
+
+.records-list {
+  list-style: none;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.records-list li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.records-list li.record-highlight {
+  border-color: var(--accent);
+  background: var(--accent-glow-soft);
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.records-list li.record-empty {
+  justify-content: center;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 11px;
+}
+
+.record-rank {
+  width: 12px;
+  text-align: right;
+}
+
+.record-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+}
+
+.record-score {
+  text-align: right;
+}
+
+.records-stats {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+
+.records-stats strong {
+  font-family: 'Courier New', Courier, monospace;
+  color: var(--accent);
+}
+
+.records-reset-btn {
+  margin-top: 2px;
+  background: var(--board-bg);
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 5px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.records-reset-btn:hover {
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+.overlay-records {
+  width: 230px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.overlay-records.hidden,
+.name-form.hidden {
+  display: none;
+}
+
+.name-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--success);
+}
+
+.name-form-row {
+  display: flex;
+  gap: 6px;
+}
+
+#name-input {
+  flex: 1;
+  min-width: 0;
+  background: var(--board-bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 5px 8px;
+  font-size: 13px;
+  user-select: text;
+}
+
+#name-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+#name-save-btn {
+  background: var(--accent);
+  color: var(--on-accent);
+  border: none;
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+#name-save-btn:hover {
+  background: var(--accent-hover);
+}
+
 /* ---- Controles ---- */
 .controls ul {
   list-style: none;
