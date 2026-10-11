@@ -53,6 +53,30 @@
           </div>
         </div>
 
+        <div id="pause-menu" class="overlay hidden" role="dialog" aria-label="Menú de pausa">
+          <div class="overlay-box pause-box">
+            <p class="pause-title">PAUSA</p>
+            <button id="pause-resume-btn" class="menu-btn primary" type="button">Reanudar</button>
+            <button id="pause-restart-btn" class="menu-btn" type="button">Reiniciar</button>
+            <button id="pause-controls-btn" class="menu-btn" type="button" aria-expanded="false">Ver controles</button>
+            <ul id="pause-controls-list" class="pause-controls hidden">
+              <li><kbd>←</kbd><kbd>→</kbd> mover</li>
+              <li><kbd>↑</kbd> / <kbd>X</kbd> rotar</li>
+              <li><kbd>↓</kbd> bajar</li>
+              <li><kbd>Space</kbd> caída</li>
+              <li><kbd>C</kbd> / <kbd>Shift</kbd> reservar</li>
+              <li><kbd>E</kbd> habilidades</li>
+              <li><kbd>M</kbd> sonido</li>
+              <li><kbd>P</kbd> / <kbd>Esc</kbd> pausa</li>
+            </ul>
+            <label class="pause-field" for="pause-start-level">
+              <span>Nivel inicial</span>
+              <select id="pause-start-level"></select>
+            </label>
+            <p class="pause-hint">El nivel inicial se aplica al reiniciar</p>
+          </div>
+        </div>
+
         <div id="ability-menu" class="overlay hidden">
           <div class="overlay-box ability-box">
             <p class="ability-title">HABILIDADES</p>
@@ -101,7 +125,7 @@
             <li><kbd>↑</kbd> rotar</li>
             <li><kbd>↓</kbd> bajar</li>
             <li><kbd>Space</kbd> caída</li>
-            <li><kbd>P</kbd> pausa</li>
+            <li><kbd>P</kbd> / <kbd>Esc</kbd> pausa</li>
             <li><kbd>C</kbd> reservar</li>
             <li><kbd>E</kbd> habilidades</li>
             <li><kbd>M</kbd> sonido</li>
