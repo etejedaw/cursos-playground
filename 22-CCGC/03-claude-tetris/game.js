@@ -203,6 +203,7 @@ const pauseControlsList = document.getElementById("pause-controls-list");
 const pauseStartLevel = document.getElementById("pause-start-level");
 const themeToggle = document.getElementById("theme-toggle");
 const themeToggleLabel = document.getElementById("theme-toggle-label");
+const skinSelect = document.getElementById("skin-select");
 
 let gridColor;
 
@@ -830,6 +831,167 @@ function updateHUD() {
 	updateObjectiveHUD();
 }
 
+const SKIN_STORAGE_KEY = "tetris.skin";
+const DEFAULT_SKIN_KEY = "retro";
+const NEON_GLOW_RATIO = 0.5;
+const PIXEL_GRID_STEPS = 6;
+
+function drawRetroCell(context, px, py, size, color) {
+	context.fillStyle = color;
+	context.fillRect(px + 1, py + 1, size - 2, size - 2);
+	context.fillStyle = "rgba(255,255,255,0.12)";
+	context.fillRect(px + 1, py + 1, size - 2, 4);
+}
+
+function drawNeonCell(context, px, py, size, color) {
+	context.shadowColor = color;
+	context.shadowBlur = size * NEON_GLOW_RATIO;
+	context.fillStyle = color;
+	context.fillRect(px + 3, py + 3, size - 6, size - 6);
+	context.shadowBlur = 0;
+	context.fillStyle = "rgba(255,255,255,0.35)";
+	context.fillRect(px + 5, py + 5, size - 10, size - 10);
+}
+
+function traceRoundedRect(context, x, y, width, height, radius) {
+	context.beginPath();
+	context.moveTo(x + radius, y);
+	context.arcTo(x + width, y, x + width, y + height, radius);
+	context.arcTo(x + width, y + height, x, y + height, radius);
+	context.arcTo(x, y + height, x, y, radius);
+	context.arcTo(x, y, x + width, y, radius);
+	context.closePath();
+}
+
+function drawPastelCell(context, px, py, size, color) {
+	context.fillStyle = color;
+	traceRoundedRect(context, px + 1, py + 1, size - 2, size - 2, size * 0.3);
+	context.fill();
+	context.fillStyle = "rgba(255,255,255,0.4)";
+	traceRoundedRect(context, px + size * 0.2, py + size * 0.15, size * 0.35, size * 0.15, size * 0.08);
+	context.fill();
+}
+
+function drawPixelCell(context, px, py, size, color) {
+	const inner = size - 2;
+	const step = inner / PIXEL_GRID_STEPS;
+	const last = PIXEL_GRID_STEPS - 1;
+	context.fillStyle = color;
+	context.fillRect(px + 1, py + 1, inner, inner);
+	for (let row = 0; row < PIXEL_GRID_STEPS; row++) {
+		for (let col = 0; col < PIXEL_GRID_STEPS; col++) {
+			if (row === 0 || col === 0) context.fillStyle = "rgba(255,255,255,0.4)";
+			else if (row === last || col === last) context.fillStyle = "rgba(0,0,0,0.35)";
+			else if ((row + col) % 2 === 0) context.fillStyle = "rgba(255,255,255,0.12)";
+			else context.fillStyle = "rgba(0,0,0,0.12)";
+			const left = Math.round(col * step);
+			const top = Math.round(row * step);
+			context.fillRect(
+				px + 1 + left,
+				py + 1 + top,
+				Math.round((col + 1) * step) - left,
+				Math.round((row + 1) * step) - top
+			);
+		}
+	}
+}
+
+const SKINS = {
+	retro: { label: "Retro", colors: COLORS, drawCell: drawRetroCell },
+	neon: {
+		label: "Neón",
+		colors: [
+			null,
+			"#00f0ff",
+			"#fff200",
+			"#d500f9",
+			"#39ff14",
+			"#ff1744",
+			"#536dfe",
+			"#ff9100",
+			"#c6ff00",
+			"#1de9b6",
+			"#ff4081",
+			"#40c4ff",
+			"#ff6e40",
+			"#8c8ca8"
+		],
+		drawCell: drawNeonCell
+	},
+	pastel: {
+		label: "Pastel",
+		colors: [
+			null,
+			"#a8e6ef",
+			"#fff1b8",
+			"#d9b8e6",
+			"#bfe8c4",
+			"#f5b8b8",
+			"#b8c2f0",
+			"#fbd2a2",
+			"#d6ecb0",
+			"#a9e0d9",
+			"#f8c8dc",
+			"#c5d3da",
+			"#d3c1b8",
+			"#bdbdcc"
+		],
+		drawCell: drawPastelCell
+	},
+	pixel: {
+		label: "Pixel art",
+		colors: [
+			null,
+			"#29b6f6",
+			"#fdd835",
+			"#ab47bc",
+			"#43a047",
+			"#e53935",
+			"#3949ab",
+			"#fb8c00",
+			"#9ccc65",
+			"#00897b",
+			"#ec407a",
+			"#78909c",
+			"#8d6e63",
+			"#616170"
+		],
+		drawCell: drawPixelCell
+	}
+};
+
+for (const skin of Object.values(SKINS)) skin.sprites = new Map();
+
+let activeSkin = SKINS[DEFAULT_SKIN_KEY];
+
+function cellSprite(skin, colorIndex, size) {
+	const spriteKey = `${colorIndex}:${size}`;
+	if (skin.sprites.has(spriteKey)) return skin.sprites.get(spriteKey);
+	const padding = Math.ceil(size * NEON_GLOW_RATIO);
+	const sprite = document.createElement("canvas");
+	sprite.width = size + padding * 2;
+	sprite.height = size + padding * 2;
+	skin.drawCell(sprite.getContext("2d"), padding, padding, size, skin.colors[colorIndex]);
+	const entry = { sprite, padding };
+	skin.sprites.set(spriteKey, entry);
+	return entry;
+}
+
+function loadSkinKey() {
+	try {
+		const storedKey = localStorage.getItem(SKIN_STORAGE_KEY);
+		return Object.hasOwn(SKINS, storedKey) ? storedKey : DEFAULT_SKIN_KEY;
+	} catch {
+		return DEFAULT_SKIN_KEY;
+	}
+}
+
+function saveSkinKey(skinKey) {
+	try {
+		localStorage.setItem(SKIN_STORAGE_KEY, skinKey);
+	} catch {}
+}
+
 function drawPowerUpBlock(context, x, y, kind, size, alpha) {
 	const { color, icon } = POWER_UPS[kind];
 	context.globalAlpha = alpha ?? 1;
@@ -851,13 +1013,9 @@ function drawBlock(context, x, y, colorIndex, size, alpha) {
 		drawPowerUpBlock(context, x, y, colorIndex, size, alpha);
 		return;
 	}
-	const color = COLORS[colorIndex];
 	context.globalAlpha = alpha ?? 1;
-	context.fillStyle = color;
-	context.fillRect(x * size + 1, y * size + 1, size - 2, size - 2);
-	// highlight
-	context.fillStyle = "rgba(255,255,255,0.12)";
-	context.fillRect(x * size + 1, y * size + 1, size - 2, 4);
+	const { sprite, padding } = cellSprite(activeSkin, colorIndex, size);
+	context.drawImage(sprite, x * size - padding, y * size - padding);
 	context.globalAlpha = 1;
 }
 
@@ -1371,10 +1529,40 @@ function applyTheme(theme) {
 	document.documentElement.dataset.theme = theme;
 	themeToggle.setAttribute("aria-checked", String(isLight));
 	themeToggleLabel.textContent = isLight ? "Claro" : "Oscuro";
+	readGridColor();
+}
+
+function readGridColor() {
 	gridColor = getComputedStyle(document.documentElement)
 		.getPropertyValue("--grid-line")
 		.trim();
 }
+
+function applySkin(skinKey) {
+	activeSkin = SKINS[skinKey];
+	document.documentElement.dataset.skin = skinKey;
+	skinSelect.value = skinKey;
+	readGridColor();
+}
+
+for (const [key, { label }] of Object.entries(SKINS)) {
+	const option = document.createElement("option");
+	option.value = key;
+	option.textContent = label;
+	skinSelect.append(option);
+}
+
+skinSelect.addEventListener("keydown", e => {
+	if (e.code.startsWith("Arrow")) e.preventDefault();
+});
+
+skinSelect.addEventListener("change", () => {
+	applySkin(skinSelect.value);
+	saveSkinKey(skinSelect.value);
+	skinSelect.blur();
+	draw();
+	drawPreviews();
+});
 
 themeToggle.addEventListener("click", () => {
 	const isLight = document.documentElement.dataset.theme === "light";
@@ -1384,4 +1572,5 @@ themeToggle.addEventListener("click", () => {
 });
 
 applyTheme("dark");
+applySkin(loadSkinKey());
 init();

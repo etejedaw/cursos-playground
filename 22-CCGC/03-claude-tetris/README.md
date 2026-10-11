@@ -44,6 +44,7 @@ Es una versión jugable del Tetris clásico con todas las mecánicas que esperar
 - **Niveles** que aumentan cada 10 líneas y aceleran la caída.
 - **Menú de pausa** (`P` o `Esc`) con Reanudar, Reiniciar, lista de controles y selector de **nivel inicial** (1–10, se aplica a la próxima partida; los retos con nivel propio lo mantienen), y **Game Over** con opción de reinicio.
 - **Tema oscuro / claro**: arranca en oscuro y se cambia con el interruptor de la esquina superior derecha.
+- **Skins visuales**: el selector de la esquina superior derecha, junto al interruptor de tema, cambia la apariencia de los bloques sin recargar. **Retro** (bloques cuadrados de colores planos, la de siempre), **Neón** (fondo negro y brillo con `shadowBlur`), **Pastel** (colores suaves y bordes redondeados) y **Pixel art** (textura de sub-píxeles claros y oscuros sobre cada bloque). La elección se guarda en `localStorage` (clave `tetris.skin`) y convive con el tema claro / oscuro (Neón fuerza el fondo del tablero a negro).
 - **Combos y bonus**: cada línea limpiada suma puntos extra según cómo la consigas. Al encadenar se muestra un aviso sobre el tablero, un destello y una nota que sube de tono con el combo.
 
 | Bonus           | Cómo se consigue                                                                                       | Efecto                                                              |
@@ -220,7 +221,8 @@ Algunos parámetros fáciles de tunear en `game.js`:
 | `COLS`         | Columnas del tablero                     | `10`                  |
 | `ROWS`         | Filas del tablero                        | `20`                  |
 | `BLOCK`        | Tamaño en píxeles de cada celda          | `30`                  |
-| `COLORS`       | Paleta de colores por tipo de pieza      | 12 colores            |
+| `COLORS`       | Paleta de la skin Retro por tipo de pieza | 14 entradas           |
+| `SKINS`        | Skins: `label`, `colors` (14 entradas) y `drawCell` | `retro`, `neon`, `pastel`, `pixel` |
 | `LINE_SCORES`  | Puntos por 1, 2, 3 o 4 líneas eliminadas | `[0,100,300,500,800]` |
 | `dropInterval` | Velocidad inicial de caída en ms         | `1000`                |
 
