@@ -15,6 +15,7 @@ const state = {
   keys: { left: false, right: false },
 };
 
+const POINTS_PER_BLOCK = 10;
 const BLOCK = { width: 32, height: 16, columns: 15, top: 64 };
 const ROW_COLORS = ['red', 'yellow', 'cyan', 'magenta', 'hotpink', 'green'];
 
@@ -141,6 +142,7 @@ function collideBallWithBlocks() {
   const hitBlock = blocks.find((block) => block.alive && overlapsBlock(ball, block));
   if (!hitBlock) return;
   hitBlock.alive = false;
+  state.score += POINTS_PER_BLOCK;
   bounceBallOffBlock(ball, hitBlock);
 }
 
@@ -188,6 +190,16 @@ function drawPaddle() {
   drawSprite(ctx, 'paddle', paddle.x, paddle.y, paddle.w, paddle.h);
 }
 
+function drawHud() {
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '16px monospace';
+  ctx.textBaseline = 'middle';
+  ctx.textAlign = 'left';
+  ctx.fillText(`PUNTOS ${state.score}`, 12, 24);
+  ctx.textAlign = 'right';
+  ctx.fillText(`VIDAS ${state.lives}`, CANVAS.width - 12, 24);
+}
+
 function drawBlocks() {
   state.blocks.forEach((block) => {
     if (!block.alive) return;
@@ -202,6 +214,7 @@ function drawBall() {
 
 function draw() {
   ctx.clearRect(0, 0, CANVAS.width, CANVAS.height);
+  drawHud();
   drawBlocks();
   drawPaddle();
   if (state.phase === 'ready' || state.phase === 'playing') drawBall();
