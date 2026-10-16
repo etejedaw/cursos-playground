@@ -71,20 +71,20 @@ Convenciones:
 
 ## Acceptance criteria
 
-- [ ] Abrir `index.html` (directamente o con `npx serve .`) carga el juego sin errores en la consola.
-- [ ] Al cargar se muestra la pantalla de inicio y `Espacio` pasa a la fase `ready`.
-- [ ] La pala responde a `←` `→` y a `A` `D` y nunca sale de los límites del canvas.
-- [ ] En `ready` la bola sigue a la pala y `Espacio` la lanza hacia arriba.
-- [ ] La bola rebota en paredes, techo y pala sin atravesarlos.
-- [ ] Hay 90 bloques (6 filas × 15 columnas) con los seis colores definidos en orden.
-- [ ] Romper un bloque lo elimina, suma exactamente 10 puntos y muestra una explosión de `EXPLOSION_DURATION` ms.
-- [ ] El juego no carga ni reproduce ningún archivo de audio.
-- [ ] Dejar caer la bola resta una vida y devuelve el juego a `ready`; con 0 vidas aparece game over.
-- [ ] Romper los 90 bloques muestra la pantalla de victoria con la puntuación final.
-- [ ] `P` o `Esc` pausa y reanuda; en pausa la bola y la pala no se mueven.
-- [ ] `Espacio` en game over o victoria reinicia con 3 vidas, 0 puntos y los 90 bloques.
-- [ ] La velocidad de la bola es la misma en un monitor de 60 Hz y de 144 Hz.
-- [ ] El repositorio no contiene `package.json`, bundler ni dependencias nuevas.
+- [X] Abrir `index.html` (directamente o con `npx serve .`) carga el juego sin errores en la consola.
+- [X] Al cargar se muestra la pantalla de inicio y `Espacio` pasa a la fase `ready`.
+- [X] La pala responde a `←` `→` y a `A` `D` y nunca sale de los límites del canvas.
+- [X] En `ready` la bola sigue a la pala y `Espacio` la lanza hacia arriba.
+- [X] La bola rebota en paredes, techo y pala sin atravesarlos.
+- [X] Hay 90 bloques (6 filas × 15 columnas) con los seis colores definidos en orden.
+- [X] Romper un bloque lo elimina, suma exactamente 10 puntos y muestra una explosión de `EXPLOSION_DURATION` ms.
+- [X] El juego no carga ni reproduce ningún archivo de audio.
+- [X] Dejar caer la bola resta una vida y devuelve el juego a `ready`; con 0 vidas aparece game over.
+- [X] Romper los 90 bloques muestra la pantalla de victoria con la puntuación final.
+- [X] `P` o `Esc` pausa y reanuda; en pausa la bola y la pala no se mueven.
+- [X] `Espacio` en game over o victoria reinicia con 3 vidas, 0 puntos y los 90 bloques.
+- [X] La velocidad de la bola es la misma en un monitor de 60 Hz y de 144 Hz.
+- [X] El repositorio no contiene `package.json`, bundler ni dependencias nuevas.
 
 ## Decisions
 
