@@ -40,6 +40,7 @@ state.blocks = createBlocks();
 
 let lastTimestamp = 0;
 
+const PAUSE_KEYS = ['KeyP', 'Escape'];
 const KEY_BINDINGS = {
   ArrowLeft: 'left',
   KeyA: 'left',
@@ -56,8 +57,12 @@ function setKey(event, pressed) {
 
 window.addEventListener('keydown', (event) => {
   setKey(event, true);
-  if (event.code === 'Space' && !event.repeat) {
+  if (event.repeat) return;
+  if (event.code === 'Space') {
     handleActionKey();
+    event.preventDefault();
+  } else if (PAUSE_KEYS.includes(event.code)) {
+    togglePause();
     event.preventDefault();
   }
 });
@@ -88,6 +93,23 @@ function launchBall() {
   ball.vy = -ball.speed * Math.cos(LAUNCH_ANGLE_FROM_VERTICAL);
 }
 
+function resetGame() {
+  state.lives = 3;
+  state.score = 0;
+  state.blocks = createBlocks();
+  state.explosions = [];
+  state.paddle.x = (CANVAS.width - state.paddle.w) / 2;
+  state.ball.vx = 0;
+  state.ball.vy = 0;
+  state.phase = 'ready';
+  placeBallOnPaddle();
+}
+
+function togglePause() {
+  if (state.phase === 'playing') state.phase = 'paused';
+  else if (state.phase === 'paused') state.phase = 'playing';
+}
+
 function handleActionKey() {
   if (state.phase === 'start') {
     state.phase = 'ready';
@@ -95,6 +117,8 @@ function handleActionKey() {
   } else if (state.phase === 'ready') {
     state.phase = 'playing';
     launchBall();
+  } else if (state.phase === 'gameover' || state.phase === 'won') {
+    resetGame();
   }
 }
 
@@ -143,14 +167,19 @@ function collideBallWithBlocks() {
   if (!hitBlock) return;
   hitBlock.alive = false;
   state.score += POINTS_PER_BLOCK;
+  if (state.blocks.every((block) => !block.alive)) state.phase = 'won';
   bounceBallOffBlock(ball, hitBlock);
 }
 
 function loseLife() {
   state.lives = Math.max(0, state.lives - 1);
-  state.phase = 'ready';
   state.ball.vx = 0;
   state.ball.vy = 0;
+  if (state.lives === 0) {
+    state.phase = 'gameover';
+    return;
+  }
+  state.phase = 'ready';
   placeBallOnPaddle();
 }
 
@@ -180,7 +209,8 @@ function moveBall(dt) {
 }
 
 function update(dt) {
-  movePaddle(dt);
+  const paddleCanMove = state.phase === 'start' || state.phase === 'ready' || state.phase === 'playing';
+  if (paddleCanMove) movePaddle(dt);
   if (state.phase === 'ready') placeBallOnPaddle();
   if (state.phase === 'playing') moveBall(dt);
 }
@@ -200,6 +230,30 @@ function drawHud() {
   ctx.fillText(`VIDAS ${state.lives}`, CANVAS.width - 12, 24);
 }
 
+const OVERLAY_MESSAGES = {
+  start: () => ['ARKANOID', 'Espacio para empezar'],
+  paused: () => ['PAUSA', 'P o Esc para continuar'],
+  gameover: () => ['GAME OVER', `Puntuación: ${state.score}`, 'Espacio para reiniciar'],
+  won: () => ['¡VICTORIA!', `Puntuación: ${state.score}`, 'Espacio para reiniciar'],
+};
+
+function drawOverlay() {
+  const buildMessage = OVERLAY_MESSAGES[state.phase];
+  if (!buildMessage) return;
+  const [title, ...details] = buildMessage();
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.65)';
+  ctx.fillRect(0, 0, CANVAS.width, CANVAS.height);
+  ctx.fillStyle = '#ffffff';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.font = 'bold 40px monospace';
+  ctx.fillText(title, CANVAS.width / 2, CANVAS.height / 2 - 30);
+  ctx.font = '18px monospace';
+  details.forEach((line, index) => {
+    ctx.fillText(line, CANVAS.width / 2, CANVAS.height / 2 + 20 + index * 28);
+  });
+}
+
 function drawBlocks() {
   state.blocks.forEach((block) => {
     if (!block.alive) return;
@@ -217,7 +271,8 @@ function draw() {
   drawHud();
   drawBlocks();
   drawPaddle();
-  if (state.phase === 'ready' || state.phase === 'playing') drawBall();
+  if (state.phase !== 'start') drawBall();
+  drawOverlay();
 }
 
 function frame(timestamp) {
