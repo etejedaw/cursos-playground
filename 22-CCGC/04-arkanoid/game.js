@@ -31,7 +31,13 @@ function setKey(event, pressed) {
   event.preventDefault();
 }
 
-window.addEventListener('keydown', (event) => setKey(event, true));
+window.addEventListener('keydown', (event) => {
+  setKey(event, true);
+  if (event.code === 'Space' && !event.repeat) {
+    handleActionKey();
+    event.preventDefault();
+  }
+});
 window.addEventListener('keyup', (event) => setKey(event, false));
 window.addEventListener('blur', () => {
   state.keys.left = false;
@@ -45,8 +51,53 @@ function movePaddle(dt) {
   paddle.x = Math.max(0, Math.min(CANVAS.width - paddle.w, paddle.x));
 }
 
+const LAUNCH_ANGLE_FROM_VERTICAL = Math.PI / 6;
+
+function placeBallOnPaddle() {
+  const { ball, paddle } = state;
+  ball.x = paddle.x + (paddle.w - ball.size) / 2;
+  ball.y = paddle.y - ball.size;
+}
+
+function launchBall() {
+  const { ball } = state;
+  ball.vx = ball.speed * Math.sin(LAUNCH_ANGLE_FROM_VERTICAL);
+  ball.vy = -ball.speed * Math.cos(LAUNCH_ANGLE_FROM_VERTICAL);
+}
+
+function handleActionKey() {
+  if (state.phase === 'start') {
+    state.phase = 'ready';
+    placeBallOnPaddle();
+  } else if (state.phase === 'ready') {
+    state.phase = 'playing';
+    launchBall();
+  }
+}
+
+function moveBall(dt) {
+  const { ball } = state;
+  ball.x += ball.vx * dt;
+  ball.y += ball.vy * dt;
+
+  if (ball.x < 0) {
+    ball.x = 0;
+    ball.vx = Math.abs(ball.vx);
+  } else if (ball.x + ball.size > CANVAS.width) {
+    ball.x = CANVAS.width - ball.size;
+    ball.vx = -Math.abs(ball.vx);
+  }
+
+  if (ball.y < 0) {
+    ball.y = 0;
+    ball.vy = Math.abs(ball.vy);
+  }
+}
+
 function update(dt) {
   movePaddle(dt);
+  if (state.phase === 'ready') placeBallOnPaddle();
+  if (state.phase === 'playing') moveBall(dt);
 }
 
 function drawPaddle() {
@@ -54,9 +105,15 @@ function drawPaddle() {
   drawSprite(ctx, 'paddle', paddle.x, paddle.y, paddle.w, paddle.h);
 }
 
+function drawBall() {
+  const { ball } = state;
+  drawSprite(ctx, 'ball', ball.x, ball.y, ball.size, ball.size);
+}
+
 function draw() {
   ctx.clearRect(0, 0, CANVAS.width, CANVAS.height);
   drawPaddle();
+  if (state.phase === 'ready' || state.phase === 'playing') drawBall();
 }
 
 function frame(timestamp) {
