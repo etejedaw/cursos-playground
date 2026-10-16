@@ -167,6 +167,7 @@ function collideBallWithBlocks() {
   if (!hitBlock) return;
   hitBlock.alive = false;
   state.score += POINTS_PER_BLOCK;
+  state.explosions.push({ x: hitBlock.x, y: hitBlock.y, color: hitBlock.color, startedAt: performance.now() });
   if (state.blocks.every((block) => !block.alive)) state.phase = 'won';
   bounceBallOffBlock(ball, hitBlock);
 }
@@ -208,7 +209,13 @@ function moveBall(dt) {
   if (ball.y > CANVAS.height) loseLife();
 }
 
+function removeFinishedExplosions() {
+  const now = performance.now();
+  state.explosions = state.explosions.filter((explosion) => now - explosion.startedAt < EXPLOSION_DURATION);
+}
+
 function update(dt) {
+  removeFinishedExplosions();
   const paddleCanMove = state.phase === 'start' || state.phase === 'ready' || state.phase === 'playing';
   if (paddleCanMove) movePaddle(dt);
   if (state.phase === 'ready') placeBallOnPaddle();
@@ -261,6 +268,16 @@ function drawBlocks() {
   });
 }
 
+function drawExplosions() {
+  const now = performance.now();
+  state.explosions.forEach((explosion) => {
+    const frames = EXPLOSION_FRAMES[explosion.color];
+    const progress = (now - explosion.startedAt) / EXPLOSION_DURATION;
+    const frameIndex = Math.min(frames.length - 1, Math.floor(progress * frames.length));
+    drawFrame(ctx, frames[frameIndex], explosion.x, explosion.y, BLOCK.width, BLOCK.height);
+  });
+}
+
 function drawBall() {
   const { ball } = state;
   drawSprite(ctx, 'ball', ball.x, ball.y, ball.size, ball.size);
@@ -270,6 +287,7 @@ function draw() {
   ctx.clearRect(0, 0, CANVAS.width, CANVAS.height);
   drawHud();
   drawBlocks();
+  drawExplosions();
   drawPaddle();
   if (state.phase !== 'start') drawBall();
   drawOverlay();
