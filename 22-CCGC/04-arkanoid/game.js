@@ -15,6 +15,28 @@ const state = {
   keys: { left: false, right: false },
 };
 
+const BLOCK = { width: 32, height: 16, columns: 15, top: 64 };
+const ROW_COLORS = ['red', 'yellow', 'cyan', 'magenta', 'hotpink', 'green'];
+
+function createBlocks() {
+  const blocks = [];
+  ROW_COLORS.forEach((color, row) => {
+    for (let column = 0; column < BLOCK.columns; column++) {
+      blocks.push({
+        x: column * BLOCK.width,
+        y: BLOCK.top + row * BLOCK.height,
+        w: BLOCK.width,
+        h: BLOCK.height,
+        color,
+        alive: true,
+      });
+    }
+  });
+  return blocks;
+}
+
+state.blocks = createBlocks();
+
 let lastTimestamp = 0;
 
 const KEY_BINDINGS = {
@@ -86,6 +108,42 @@ function bounceBallOnPaddle(previousBottom) {
   }
 }
 
+function overlapsBlock(ball, block) {
+  return (
+    ball.x < block.x + block.w &&
+    ball.x + ball.size > block.x &&
+    ball.y < block.y + block.h &&
+    ball.y + ball.size > block.y
+  );
+}
+
+function bounceBallOffBlock(ball, block) {
+  const penetrationX = Math.min(ball.x + ball.size - block.x, block.x + block.w - ball.x);
+  const penetrationY = Math.min(ball.y + ball.size - block.y, block.y + block.h - ball.y);
+  const ballCenterX = ball.x + ball.size / 2;
+  const ballCenterY = ball.y + ball.size / 2;
+  const blockCenterX = block.x + block.w / 2;
+  const blockCenterY = block.y + block.h / 2;
+
+  if (penetrationX < penetrationY) {
+    const direction = ballCenterX < blockCenterX ? -1 : 1;
+    ball.x += direction * penetrationX;
+    ball.vx = direction * Math.abs(ball.vx);
+  } else {
+    const direction = ballCenterY < blockCenterY ? -1 : 1;
+    ball.y += direction * penetrationY;
+    ball.vy = direction * Math.abs(ball.vy);
+  }
+}
+
+function collideBallWithBlocks() {
+  const { ball, blocks } = state;
+  const hitBlock = blocks.find((block) => block.alive && overlapsBlock(ball, block));
+  if (!hitBlock) return;
+  hitBlock.alive = false;
+  bounceBallOffBlock(ball, hitBlock);
+}
+
 function loseLife() {
   state.lives = Math.max(0, state.lives - 1);
   state.phase = 'ready';
@@ -114,6 +172,7 @@ function moveBall(dt) {
   }
 
   bounceBallOnPaddle(previousBottom);
+  collideBallWithBlocks();
 
   if (ball.y > CANVAS.height) loseLife();
 }
@@ -129,6 +188,13 @@ function drawPaddle() {
   drawSprite(ctx, 'paddle', paddle.x, paddle.y, paddle.w, paddle.h);
 }
 
+function drawBlocks() {
+  state.blocks.forEach((block) => {
+    if (!block.alive) return;
+    drawSprite(ctx, `block_${block.color}`, block.x, block.y, block.w, block.h);
+  });
+}
+
 function drawBall() {
   const { ball } = state;
   drawSprite(ctx, 'ball', ball.x, ball.y, ball.size, ball.size);
@@ -136,6 +202,7 @@ function drawBall() {
 
 function draw() {
   ctx.clearRect(0, 0, CANVAS.width, CANVAS.height);
+  drawBlocks();
   drawPaddle();
   if (state.phase === 'ready' || state.phase === 'playing') drawBall();
 }
