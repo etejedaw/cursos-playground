@@ -75,8 +75,28 @@ function handleActionKey() {
   }
 }
 
+function bounceBallOnPaddle(previousBottom) {
+  const { ball, paddle } = state;
+  const descending = ball.vy > 0;
+  const crossedPaddleTop = previousBottom <= paddle.y && ball.y + ball.size >= paddle.y;
+  const overlapsHorizontally = ball.x + ball.size > paddle.x && ball.x < paddle.x + paddle.w;
+  if (descending && crossedPaddleTop && overlapsHorizontally) {
+    ball.y = paddle.y - ball.size;
+    ball.vy = -Math.abs(ball.vy);
+  }
+}
+
+function loseLife() {
+  state.lives = Math.max(0, state.lives - 1);
+  state.phase = 'ready';
+  state.ball.vx = 0;
+  state.ball.vy = 0;
+  placeBallOnPaddle();
+}
+
 function moveBall(dt) {
   const { ball } = state;
+  const previousBottom = ball.y + ball.size;
   ball.x += ball.vx * dt;
   ball.y += ball.vy * dt;
 
@@ -92,6 +112,10 @@ function moveBall(dt) {
     ball.y = 0;
     ball.vy = Math.abs(ball.vy);
   }
+
+  bounceBallOnPaddle(previousBottom);
+
+  if (ball.y > CANVAS.height) loseLife();
 }
 
 function update(dt) {
