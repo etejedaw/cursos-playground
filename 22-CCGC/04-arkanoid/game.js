@@ -17,10 +17,46 @@ const state = {
 
 let lastTimestamp = 0;
 
-function update(dt) {}
+const KEY_BINDINGS = {
+  ArrowLeft: 'left',
+  KeyA: 'left',
+  ArrowRight: 'right',
+  KeyD: 'right',
+};
+
+function setKey(event, pressed) {
+  const direction = KEY_BINDINGS[event.code];
+  if (!direction) return;
+  state.keys[direction] = pressed;
+  event.preventDefault();
+}
+
+window.addEventListener('keydown', (event) => setKey(event, true));
+window.addEventListener('keyup', (event) => setKey(event, false));
+window.addEventListener('blur', () => {
+  state.keys.left = false;
+  state.keys.right = false;
+});
+
+function movePaddle(dt) {
+  const { paddle, keys } = state;
+  const direction = (keys.right ? 1 : 0) - (keys.left ? 1 : 0);
+  paddle.x += direction * paddle.speed * dt;
+  paddle.x = Math.max(0, Math.min(CANVAS.width - paddle.w, paddle.x));
+}
+
+function update(dt) {
+  movePaddle(dt);
+}
+
+function drawPaddle() {
+  const { paddle } = state;
+  drawSprite(ctx, 'paddle', paddle.x, paddle.y, paddle.w, paddle.h);
+}
 
 function draw() {
   ctx.clearRect(0, 0, CANVAS.width, CANVAS.height);
+  drawPaddle();
 }
 
 function frame(timestamp) {
